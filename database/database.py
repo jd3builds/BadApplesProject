@@ -29,8 +29,16 @@ if __name__ == "__main__":
     # create_connection("useritems.db")
 
     sql_create_general_items_table = """ CREATE TABLE IF NOT EXISTS general_items (
-                                    name text PRIMARY KEY,
-                                    days_to_exp integer NOT NULL
+                                    itemName text PRIMARY KEY,
+                                    id integer NOT NULL,
+                                    days_to_exp integer NOT NULL,
+                                    category text,
+                                    subcategory text,
+                                    storageType text,
+                                    unopened bit,
+                                    expirationLowerBound integer,
+                                    expirationUpperBound integer,
+                                    expirationUnitType integer
                                 );"""
 
     # need to make a query to make user_items table
