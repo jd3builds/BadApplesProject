@@ -1,21 +1,54 @@
 import kivy
 from kivy.app import App
-from kivy.uix.label import Label
-from kivy.uix.button import Button;
+from kivy.lang import Builder
+from kivy.uix.screenmanager import ScreenManager, Screen
+
+from android_app.utilities import SwipeListener
 
 kivy.require('1.11.1')
 
-class BaseApp(App):
 
-    # Function that returns the root widget
+class Manager(ScreenManager):
+    """
+    swipe_listener = SwipeListener()
+
+    def on_touch_down(self, touch):
+        self.swipe_listener.set_initial(touch.x)
+
+    def on_touch_up(self, touch, *args):
+        direction = self.swipe_listener.get_swipe_direction(touch.x)
+        if direction == 'right':
+    """
+    pass
+
+
+class LandingPage(Screen):
+    pass
+
+
+class PantryPage(Screen):
+    pass
+
+
+class IdeasPage(Screen):
+    pass
+
+
+class SettingsPage(Screen):
+    pass
+
+
+class AboutPage(Screen):
+    pass
+
+
+style = Builder.load_file('pages.kv')
+
+
+class BadApplesApp(App):
     def build(self):
-
-        # Label with text Hello World is
-        # returned as root widget
-        return Label(text="Hello World !")
-
-    # Here our class is initialized
+        return style
 
 
 if __name__ == "__main__":
-    BaseApp().run()
+    BadApplesApp().run()
