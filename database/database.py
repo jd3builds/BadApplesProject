@@ -196,6 +196,99 @@ def insert_storage_type_table(storage_type):
 # ----------------- UPDATE FUNCTIONS ----------------- #
 
 
+# General function for updating information using the given sql code in specified table from db connection
+def update_data(connection, update_sql, data):
+    try:
+        curs = connection.cursor()
+        curs.execute(update_sql, data)
+    except Error as err:
+        print(err)
+
+
+# Updates item in general_items table in expirations.db file
+def update_general_table(item):
+    sql_update_general_table = """ UPDATE general_items 
+                                    SET id = ? ,
+                                        category = ? ,
+                                        subcategory = ? ,
+                                        storageType = ? ,
+                                        unopened = ? ,
+                                        expirationLowerBound = ? ,
+                                        expirationUpperBound = ? ,
+                                        expirationUnitType = ?
+                                    WHERE itemName = ?"""
+
+    connection = create_connection("expirations.db")
+
+    if connection is not None:
+        insert_table(connection, sql_update_general_table, item)
+    else:
+        print("Unable to create db connection.")
+
+
+# Updates item in user_items table in useritems.db file
+def update_user_table(item):
+    sql_update_user_table = """ UPDATE user_items 
+                                        SET id = ? ,
+                                            category = ? ,
+                                            subcategory = ? ,
+                                            storageType = ? ,
+                                            unopened = ? ,
+                                            expirationLowerBound = ? ,
+                                            expirationUpperBound = ? ,
+                                            expirationUnitType = ?
+                                        WHERE itemName = ?"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        insert_table(connection, sql_update_user_table, item)
+    else:
+        print("Unable to create db connection.")
+
+
+# Updates category in categories table in categories.db file
+def update_category_table(category):
+    sql_update_category_table = """UPDATE categories 
+                                    SET category = ?
+                                    WHERE id = ?"""
+
+    connection = create_connection("categories.db")
+
+    if connection is not None:
+        insert_table(connection, sql_update_category_table, category)
+    else:
+        print("Unable to create db connection.")
+
+
+# Updates subcategory in subcategories table in subcategories.db file
+def update_subcategory_table(subcategory):
+    sql_update_subcategory_table = """UPDATE subcategories 
+                                    SET subcategory = ?
+                                    WHERE id = ?"""
+
+    connection = create_connection("subcategories.db")
+
+    if connection is not None:
+        insert_table(connection, sql_update_subcategory_table, subcategory)
+    else:
+        print("Unable to create db connection.")
+
+
+# Updates storage_type in storagetype table in storagetypes.db
+def update_storage_type_table(storage_type):
+    sql_update_storage_type_table = """UPDATE storagetype
+                                    SET storagetype = ?
+                                    WHERE id = ?"""
+
+    connection = create_connection("storagetypes.db")
+
+    if connection is not None:
+        insert_table(connection, sql_update_storage_type_table, storage_type)
+    else:
+        print("Unable to create db connection.")
+
+
 if __name__ == "__main__":
     create_general_table()
     create_user_table()
