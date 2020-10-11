@@ -2,6 +2,28 @@ import sqlite3
 from sqlite3 import Error
 
 
+# ----------------- HELPER FUNCTIONS ----------------- #
+
+
+# General function that executes a query given the connection and sql code, optional data parameter
+# Returns true on success, false otherwise
+def execute_query(connection, sql, data=None):
+    success = False
+
+    try:
+        curs = connection.cursor()
+        if data is None:
+            curs.execute(sql)
+        else:
+            curs.execute(sql, data)
+        connection.commit()
+        success = True
+    except Error as err:
+        print(err)
+
+    return success
+
+
 # ----------------- CREATION FUNCTIONS ----------------- #
 
 
@@ -120,22 +142,6 @@ def create_storage_type_table():
 # ----------------- INSERTION FUNCTIONS ----------------- #
 
 
-# General function for inserting information using the given sql code in specified table from db connection
-# Returns True on successful insertion, returns False otherwise
-def insert_table(connection, insert_sql, info):
-    success = False
-
-    try:
-        curs = connection.cursor()
-        curs.execute(insert_sql, info)
-        connection.commit()
-        success = True
-    except Error as err:
-        print(err)
-
-    return success
-
-
 # Inserts item in general_items table in expirations.db file
 # Returns True on successful insertion, returns False otherwise
 def insert_general_table(item):
@@ -146,7 +152,7 @@ def insert_general_table(item):
     connection = create_connection("expirations.db")
 
     if connection is not None:
-        return insert_table(connection, sql_insert_general_table, item)
+        return execute_query(connection, sql_insert_general_table, item)
     else:
         print("Unable to create db connection.")
         return False
@@ -162,7 +168,7 @@ def insert_user_table(item):
     connection = create_connection("useritems.db")
 
     if connection is not None:
-        return insert_table(connection, sql_insert_user_table, item)
+        return execute_query(connection, sql_insert_user_table, item)
     else:
         print("Unable to create db connection.")
         return False
@@ -176,7 +182,7 @@ def insert_category_table(category):
     connection = create_connection("categories.db")
 
     if connection is not None:
-        return insert_table(connection, sql_insert_category_table, category)
+        return execute_query(connection, sql_insert_category_table, category)
     else:
         print("Unable to create db connection.")
         return False
@@ -190,7 +196,7 @@ def insert_subcategory_table(subcategory):
     connection = create_connection("subcategories.db")
 
     if connection is not None:
-        return insert_table(connection, sql_insert_subcategory_table, subcategory)
+        return execute_query(connection, sql_insert_subcategory_table, subcategory)
     else:
         print("Unable to create db connection.")
         return False
@@ -204,22 +210,13 @@ def insert_storage_type_table(storage_type):
     connection = create_connection("storagetypes.db")
 
     if connection is not None:
-        return insert_table(connection, sql_insert_storage_type_table, storage_type)
+        return execute_query(connection, sql_insert_storage_type_table, storage_type)
     else:
         print("Unable to create db connection.")
         return False
 
 
 # ----------------- UPDATE FUNCTIONS ----------------- #
-
-
-# General function for updating information using the given sql code in specified table from db connection
-def update_data(connection, update_sql, data):
-    try:
-        curs = connection.cursor()
-        curs.execute(update_sql, data)
-    except Error as err:
-        print(err)
 
 
 # Updates item in general_items table in expirations.db file
@@ -238,9 +235,10 @@ def update_general_table(item):
     connection = create_connection("expirations.db")
 
     if connection is not None:
-        insert_table(connection, sql_update_general_table, item)
+        return execute_query(connection, sql_update_general_table, item)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Updates item in user_items table in useritems.db file
@@ -259,9 +257,10 @@ def update_user_table(item):
     connection = create_connection("useritems.db")
 
     if connection is not None:
-        insert_table(connection, sql_update_user_table, item)
+        return execute_query(connection, sql_update_user_table, item)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Updates category in categories table in categories.db file
@@ -273,9 +272,10 @@ def update_category_table(category):
     connection = create_connection("categories.db")
 
     if connection is not None:
-        insert_table(connection, sql_update_category_table, category)
+        return execute_query(connection, sql_update_category_table, category)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Updates subcategory in subcategories table in subcategories.db file
@@ -287,9 +287,10 @@ def update_subcategory_table(subcategory):
     connection = create_connection("subcategories.db")
 
     if connection is not None:
-        insert_table(connection, sql_update_subcategory_table, subcategory)
+        return execute_query(connection, sql_update_subcategory_table, subcategory)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Updates storage_type in storagetype table in storagetypes.db
@@ -301,9 +302,91 @@ def update_storage_type_table(storage_type):
     connection = create_connection("storagetypes.db")
 
     if connection is not None:
-        insert_table(connection, sql_update_storage_type_table, storage_type)
+        return execute_query(connection, sql_update_storage_type_table, storage_type)
     else:
         print("Unable to create db connection.")
+        return False
+
+
+# ----------------- DELETE FUNCTIONS ----------------- #
+
+
+# Deletes a user_item according to its id from useritems.db
+def delete_user_item(id):
+    sql_delete_user_item = """DELETE FROM user_items WHERE id = ?"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        return execute_query(connection, sql_delete_user_item, (id,))
+    else:
+        print("Unable to create db connection.")
+        return False
+
+
+# Deletes all user_items in the table from useritems.db
+def delete_all_user_items():
+    sql_delete_all_items = """DELETE FROM user_items"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        return execute_query(connection, sql_delete_all_items)
+    else:
+        print("Unable to create db connection.")
+        return False
+
+
+# Deletes all general_items in the table from expirations.db
+def delete_all_general_items():
+    sql_delete_all_items = """DELETE FROM general_items"""
+
+    connection = create_connection("expirations.db")
+
+    if connection is not None:
+        return execute_query(connection, sql_delete_all_items)
+    else:
+        print("Unable to create db connection.")
+        return False
+
+
+# Deletes all categories in the table from categories.db
+def delete_all_categories():
+    sql_delete_all_items = """DELETE FROM categories"""
+
+    connection = create_connection("categories.db")
+
+    if connection is not None:
+        return execute_query(connection, sql_delete_all_items)
+    else:
+        print("Unable to create db connection.")
+        return False
+
+
+# Deletes all subcategories in the table from subcategories.db
+def delete_all_subcategories():
+    sql_delete_all_items = """DELETE FROM general_items"""
+
+    connection = create_connection("subcategories.db")
+
+    if connection is not None:
+        return execute_query(connection, sql_delete_all_items)
+    else:
+        print("Unable to create db connection.")
+        return False
+
+
+# Deletes all storage types in the table from storagetypes.db
+def delete_all_storage_types():
+    sql_delete_all_items = """DELETE FROM storagetypes"""
+
+    connection = create_connection("storagetypes.db")
+
+    if connection is not None:
+        return execute_query(connection, sql_delete_all_items)
+    else:
+        print("Unable to create db connection.")
+        return False
 
 
 if __name__ == "__main__":
