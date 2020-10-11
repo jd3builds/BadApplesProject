@@ -121,15 +121,23 @@ def create_storage_type_table():
 
 
 # General function for inserting information using the given sql code in specified table from db connection
+# Returns True on successful insertion, returns False otherwise
 def insert_table(connection, insert_sql, info):
+    success = False
+
     try:
         curs = connection.cursor()
         curs.execute(insert_sql, info)
+        connection.commit()
+        success = True
     except Error as err:
         print(err)
 
+    return success
+
 
 # Inserts item in general_items table in expirations.db file
+# Returns True on successful insertion, returns False otherwise
 def insert_general_table(item):
     sql_insert_general_table = """ INSERT INTO general_items (itemName, id, category, subcategory, storageType, 
                                                             unopened, expirationLowerBound, expirationUpperBound,
@@ -138,12 +146,14 @@ def insert_general_table(item):
     connection = create_connection("expirations.db")
 
     if connection is not None:
-        insert_table(connection, sql_insert_general_table, item)
+        return insert_table(connection, sql_insert_general_table, item)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Inserts item in user_items table in useritems.db file
+# Returns True on successful insertion, returns False otherwise
 def insert_user_table(item):
     sql_insert_user_table = """INSERT INTO user_items (itemName, id, category, subcategory, storageType, 
                                                             unopened, expirationLowerBound, expirationUpperBound,
@@ -152,45 +162,52 @@ def insert_user_table(item):
     connection = create_connection("useritems.db")
 
     if connection is not None:
-        insert_table(connection, sql_insert_user_table, item)
+        return insert_table(connection, sql_insert_user_table, item)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Inserts category in categories table in categories.db file
+# Returns True on successful insertion, returns False otherwise
 def insert_category_table(category):
     sql_insert_category_table = """INSERT INTO categories (id, category) VALUES(?, ?)"""
 
     connection = create_connection("categories.db")
 
     if connection is not None:
-        insert_table(connection, sql_insert_category_table, category)
+        return insert_table(connection, sql_insert_category_table, category)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Inserts subcategory in subcategories table in subcategories.db file
+# Returns True on successful insertion, returns False otherwise
 def insert_subcategory_table(subcategory):
     sql_insert_subcategory_table = """INSERT INTO subcategories (id, subcategory) VALUES(?, ?)"""
 
     connection = create_connection("subcategories.db")
 
     if connection is not None:
-        insert_table(connection, sql_insert_subcategory_table, subcategory)
+        return insert_table(connection, sql_insert_subcategory_table, subcategory)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # Inserts storage_type in storagetype table in storagetypes.db
+# Returns True on successful insertion, returns False otherwise
 def insert_storage_type_table(storage_type):
     sql_insert_storage_type_table = """INSERT INTO storagetype (id, storagetype) VALUES(?, ?)"""
 
     connection = create_connection("storagetypes.db")
 
     if connection is not None:
-        insert_table(connection, sql_insert_storage_type_table, storage_type)
+        return insert_table(connection, sql_insert_storage_type_table, storage_type)
     else:
         print("Unable to create db connection.")
+        return False
 
 
 # ----------------- UPDATE FUNCTIONS ----------------- #
