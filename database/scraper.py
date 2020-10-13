@@ -28,6 +28,9 @@ def get_lower_and_upper_range(raw):
     if "Year" in raw and "Months" in raw:
         return None
 
+    if "date" in raw:
+        raw = ' '.join(raw.split()[0:2])
+
     if raw == 'Same Day':
         return (1, 1, 'Day')
     elif '-' in raw:
@@ -81,6 +84,7 @@ def scrape_single_item_from_page(URL, general_name, category,subcategory):
                 unopened = get_unopened(categories[0])
                 ranges = get_lower_and_upper_range(current_contents[i].contents[0])
                 if ranges is None:
+                    pass
                     print("Unable to add item " + name)
                 else:
                     item = (name, counter, category, subcategory, categories[i], unopened, ranges[0], ranges[1], ranges[2])
