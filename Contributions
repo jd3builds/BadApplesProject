@@ -18,3 +18,7 @@ Description: Created basic designs of app pages https://docs.google.com/document
 Name: John Dillon
 Date(s): 10/8-10/11/2020
 Description: Created all database schemas, tables, and files. Created functionality to create tables, add items to tables, and update items in ALL tables.
+
+Name: Pablo Estrada
+Date(s): 10/7-10/12/2020
+Descriptiom: Researching sites with food expiration information. Wrote scraper to get fruit information from https://www.eatbydate.com/. Uploaded data to the database. Merged backend branch.
