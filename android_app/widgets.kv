@@ -1,5 +1,6 @@
 #kivy 1.11.1
 #:import utils kivy.utils
+#:import ScrollEffect kivy.effects.scroll.ScrollEffect
 
 # Image Button
 # For button alone define image attributes immediately below 'ImageButton' declaration.
@@ -132,6 +133,7 @@
 <MenuItem@BoxLayout>:
     orientation: 'horizontal'
     size_hint_y: None
+    height: dp(30)
 
     # Padding
     Label:
@@ -177,6 +179,9 @@
 # Scroll Menu
 # Modification of ScrollView widget that allows for greater than one children.
 <ScrollMenu@ScrollView>:
+    #scroll_type: ['bars','content']
+    #effect_cls: ScrollEffect
+    #min_overscroll: self.height
     GridLayout:
         id: grid_layout
         size_hint_y: None

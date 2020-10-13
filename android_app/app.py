@@ -31,9 +31,11 @@ class LandingPage(Screen):
 
 
 class PantryPage(Screen):
+    temp = 1
     def on_enter(self, *args):
         self.ids.nav_bar.ids.pantry_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
-        self.ids.scroll_menu.add_to_menu('Apple', '2 Weeks', 4)  # TODO TEST ONLY
+        self.ids.scroll_menu.add_to_menu('Apple', '2 Weeks', self.temp)  # TODO TEST ONLY
+        self.temp += 1
 
 
 class IdeasPage(Screen):
