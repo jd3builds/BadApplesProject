@@ -44,8 +44,8 @@ def create_connection(db_file):
 # Creates the general items table in the expirations.db file
 def create_general_table():
     sql_create_general_items_table = """ CREATE TABLE IF NOT EXISTS general_items (
-                                        itemName varchar PRIMARY KEY,
-                                        id integer NOT NULL,
+                                        itemName varchar,
+                                        id integer NOT NULL PRIMARY KEY,
                                         category integer NOT NULL,
                                         subcategory integer,
                                         storageType integer,
