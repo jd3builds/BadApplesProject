@@ -4,7 +4,6 @@
 #:import ButtonBehavior kivy.uix.behaviors
 #:include widgets.kv
 
-# TODO cite: https://icons8.com in about page
 
 Manager:
     transition: Transition.NoTransition()
@@ -28,7 +27,6 @@ Manager:
 
     BoxLayout:
         orientation: 'vertical'
-
 
         # Flip Camera Button
         BoxLayout:
@@ -104,14 +102,40 @@ Manager:
                     size: self.size
                     pos: self.pos
 
-        # Content
-        Label:
-            text: 'content here'
-            color: utils.get_color_from_hex("#000501")
-            size_hint_y: .8
+        #Subtitle Bar
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .05
+            Label:
+                size_hint_x: .1
+            Label:
+                text: 'Used/Expired'
+                color: utils.get_color_from_hex("#000000")
+                bold: True
+                size_hint_x: .15
+            Label:
+                size_hint_x: .05
+            Label:
+                text: 'Item (Quantity)'
+                color: utils.get_color_from_hex("#000000")
+                bold: True
+                size_hint_x: .7
+            Label:
+                text: 'Time Remaining'
+                color: utils.get_color_from_hex("#000000")
+                bold: True
+                size_hint_x: .2
+            Label:
+                size_hint_x: .1
+
+        # Produce Menu
+        ScrollMenu
+            id: scroll_menu
+            size_hint_y: .75
 
         # Navigation Bar
         ButtonBar:
+            id: nav_bar
             size_hint_y: .15
 
 
@@ -150,6 +174,7 @@ Manager:
 
         # Navigation Bar
         ButtonBar:
+            id: nav_bar
             size_hint_y: .15
 
 
@@ -167,7 +192,7 @@ Manager:
     BoxLayout:
         orientation: 'vertical'
 
-        # Settings Bar
+        # Title Bar
         Label:
             text: 'Settings'
             color: utils.get_color_from_hex("#000501")
@@ -188,9 +213,11 @@ Manager:
 
         # Navigation Bar
         ButtonBar:
+            id: nav_bar
             size_hint_y: .15
 
-<AboutPage>:
+
+<AboutPage>
     name: 'about'
 
     # Background
@@ -219,10 +246,11 @@ Manager:
 
         # Content
         Label:
-            text: 'content here'
+            text: 'Icons from https://icons8.com'
             color: utils.get_color_from_hex("#000501")
             size_hint_y: .8
 
         # Navigation Bar
         ButtonBar:
+            id: nav_bar
             size_hint_y: .15
