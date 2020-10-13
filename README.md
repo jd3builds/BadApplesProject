@@ -7,3 +7,9 @@ In order to start developing, please clone the repo and work on your own branch,
 Feel free to use the database-dev, app-dev, and script-dev branches when working in a pair/team.
 
 Do NOT push to master without passing code by multiple teammates. =D
+
+To get set up:
+
+clone from master --> create venv in pycharm using python3.8 --> cd into venv and Scripts --> run activate.bat --> cd .. cd .. --> install requirements with "pip install -r requirements.txt" --> run these commands in terminal --> python -m pip install --upgrade pip wheel setuptools --> python -m pip install docutils pygments pypiwin32 kivy.deps.sdl2 kivy.deps.glew --extra-index-url https://kivy.org/downloads/packages/simple --> pip install kivy[base] kivy_examples --pre --extra-index-url https://kivy.org/downloads/simple/ 
+
+This should get you up and running. Contact John with any questions.

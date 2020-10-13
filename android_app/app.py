@@ -1,18 +1,15 @@
 import kivy
 from kivy.app import App
 from kivy.uix.label import Label
+from kivy.uix.button import Button;
 
-# Replace this with your
-# current version
 kivy.require('1.11.1')
 
+class BaseApp(App):
 
-# Defining a class
-class MyFirstKivyApp(App):
-
-    # Function that returns
-    # the root widget
+    # Function that returns the root widget
     def build(self):
+
         # Label with text Hello World is
         # returned as root widget
         return Label(text="Hello World !")
@@ -20,7 +17,5 @@ class MyFirstKivyApp(App):
     # Here our class is initialized
 
 
-# and its run() method is called.
-# This initializes and starts
-# our Kivy application.
-MyFirstKivyApp().run()
+if __name__ == "__main__":
+    BaseApp().run()
