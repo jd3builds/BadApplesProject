@@ -22,3 +22,7 @@ Description: Created all database schemas, tables, and files. Created functional
 Name: Pablo Estrada
 Date(s): 10/7-10/12/2020
 Descriptiom: Researching sites with food expiration information. Wrote scraper to get fruit information from https://www.eatbydate.com/. Uploaded data to the database. Merged backend branch.
+
+Name: Joseph Brody, John Dillon
+Date(s): 10/14/2020
+Description: Integrated database with front-end. Insertion and removal of fruit from front end synced with database.
