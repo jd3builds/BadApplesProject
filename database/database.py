@@ -302,6 +302,20 @@ def update_storage_type_table(storage_type):
 # ----------------- QUERY FUNCTIONS ----------------- #
 
 
+def query_all_user_item():
+    sql_query_user_item = """SELECT * FROM user_items"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        curs = execute_sql(connection, sql_query_user_item, (id,), commit=False)
+        results = curs.fetchall()
+        return results
+    else:
+        print("Unable to create useritems.db connection.")
+        return None
+
+
 # Queries for a user_item based on if item id matches input
 # Returns table results as 2d array from the query
 def query_user_item_by_id(id):
