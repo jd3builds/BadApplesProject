@@ -7,7 +7,6 @@ from kivy.uix.scrollview import ScrollView
 from kivy import utils
 from android_app.utilities import SwipeListener
 
-
 kivy.require('1.11.1')
 
 
@@ -31,11 +30,12 @@ class LandingPage(Screen):
 
 
 class PantryPage(Screen):
-    temp = 1
+
     def on_enter(self, *args):
         self.ids.nav_bar.ids.pantry_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
-        self.ids.scroll_menu.add_to_menu('Apple', '2 Weeks', self.temp)  # TODO TEST ONLY
-        self.temp += 1
+
+    def manual_entry_pressed(self):
+        self.ids.scroll_menu.add_to_menu('Apple', '2 Weeks', 1)  # TODO TEST ONLY
 
 
 class IdeasPage(Screen):

@@ -90,17 +90,21 @@ Manager:
         orientation: 'vertical'
 
         # Title Bar
-        Label:
-            text: 'Pantry'
-            color: utils.get_color_from_hex("#000501")
+        BoxLayout:
+            orientation: 'horizontal'
             size_hint_y: .1
-            font_size: 30
-            canvas.before:
-                Color:
-                    rgba: utils.get_color_from_hex("#73AB84")
-                Rectangle:
-                    size: self.size
-                    pos: self.pos
+            Label:
+                text: 'Pantry'
+                color: utils.get_color_from_hex("#000501")
+                font_size: 30
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex("#73AB84")
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            Button:
+                on_release: root.manual_entry_pressed()
 
         #Subtitle Bar
         BoxLayout:
