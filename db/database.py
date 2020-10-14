@@ -7,7 +7,7 @@ from sqlite3 import Error
 
 # General function that executes sql code given the connection and sql
 # Optional parameter for data used in the query
-# Optional parameter for not needing to execute a database commit (when not modifying data)
+# Optional parameter for not needing to execute a db commit (when not modifying data)
 # Returns cursor on success, None otherwise
 def execute_sql(connection, sql, data=None, commit=True):
     try:

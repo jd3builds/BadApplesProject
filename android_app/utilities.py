@@ -24,3 +24,25 @@ class SwipeListener:
                 return 'right'
             return 'left'
         return None
+
+
+class Produce:
+
+    def __init__(self, item):
+        self.__itemName, self.__id, self.__category, self.__subcategory, self.__storageType, self.__unopened, \
+        self.__expirationLowerBound, self.__expirationUpperBound, self.__expirationUnitType = item
+
+    def __getitem__(self, item):
+        return getattr(self, 'expirationLowerBound')
+
+    @property
+    def expirationLowerBound(self):
+        return self.__expirationLowerBound
+
+    @property
+    def expirationUnitType(self):
+        return self.__expirationUnitType
+
+    def return_as_tuple(self):
+        return (self.__itemName, self.__id, self.__category, self.__subcategory, self.__storageType, self.__unopened, \
+        self.__expirationLowerBound, self.__expirationUpperBound, self.__expirationUnitType)

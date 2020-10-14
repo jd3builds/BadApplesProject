@@ -5,8 +5,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy import utils
-from android_app.utilities import SwipeListener
-
+from android_app.utilities import SwipeListener, Produce
+from operator import itemgetter, attrgetter, methodcaller
+from db.database import *
 kivy.require('1.11.1')
 
 
@@ -30,11 +31,22 @@ class LandingPage(Screen):
 
 
 class PantryPage(Screen):
+    produce_list = []
 
     def on_enter(self, *args):
         self.ids.nav_bar.ids.pantry_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
 
     def manual_entry_pressed(self):
+        self.produce_list.append(Produce(('blueberries', 21, 'fruit', 'berries', 'fridge', False, 2, 4, 'days')))
+        insert_user_table((self.produce_list[-1]).return_as_tuple())
+        # self.produce_list.append(Produce(('wild blueberries', 24, 'fruit', 'berries', 'fridge', False, 1, 5, 'days')))
+        # self.produce_list.append(Produce(('strawberries', 22, 'fruit', 'berries', 'fridge', False, 1, 3, 'weeks')))
+        # self.produce_list.append(Produce(('blackberries', 23, 'fruit', 'berries', 'fridge', False, 2, 5, 'months')))
+        # self.produce_list = sorted(self.produce_list, key=itemgetter(6), reverse=False)
+        # for produce in self.produce_list:
+        #     print(str(produce.expirationLowerBound) + " " + produce.expirationUnitType)
+
+
         self.ids.scroll_menu.add_to_menu('Apple', '2 Weeks', 1)  # TODO TEST ONLY
 
 

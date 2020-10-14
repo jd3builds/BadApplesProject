@@ -7,5 +7,23 @@
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:D:\BadApplesProject\database\expirations.db</jdbc-url>
     </data-source>
+    <data-source source="LOCAL" name="useritems" uuid="b639f65e-4585-4774-aebb-934d4461bd52">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\database\useritems.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="useritems [2]" uuid="0821f3a1-f6dc-4084-beba-55c0e06509bf">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\db\useritems.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="expirations [2]" uuid="743a8ee9-170a-4c2d-8792-7b20086fae0a">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\db\expirations.db</jdbc-url>
+    </data-source>
   </component>
 </project>
