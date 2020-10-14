@@ -66,8 +66,8 @@ def create_general_table():
 # Creates the user items table in the useritems.db file
 def create_user_table():
     sql_create_user_items_table = """ CREATE TABLE IF NOT EXISTS user_items (
-                                    itemName varchar PRIMARY KEY,
-                                    id integer NOT NULL,
+                                    itemName varchar NOT NULL,
+                                    id integer PRIMARY KEY,
                                     category integer NOT NULL,
                                     subcategory integer,
                                     storageType integer,
@@ -308,7 +308,7 @@ def query_all_user_item():
     connection = create_connection("useritems.db")
 
     if connection is not None:
-        curs = execute_sql(connection, sql_query_user_item, (id,), commit=False)
+        curs = execute_sql(connection, sql_query_user_item, commit=False)
         results = curs.fetchall()
         return results
     else:
@@ -435,3 +435,4 @@ if __name__ == "__main__":
     create_storage_type_table()
     create_category_table()
     create_subcategory_table()
+    insert_user_table(('blueberries', 21, 'fruit', 'berries', 'fridge', False, 2, 4, 'days'))

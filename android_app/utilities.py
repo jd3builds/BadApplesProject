@@ -36,12 +36,20 @@ class Produce:
         return getattr(self, 'expirationLowerBound')
 
     @property
+    def itemName(self):
+        return self.__itemName
+
+    @property
     def expirationLowerBound(self):
         return self.__expirationLowerBound
 
     @property
     def expirationUnitType(self):
         return self.__expirationUnitType
+
+    @property
+    def id(self):
+        return self.__id
 
     def return_as_tuple(self):
         return (self.__itemName, self.__id, self.__category, self.__subcategory, self.__storageType, self.__unopened, \

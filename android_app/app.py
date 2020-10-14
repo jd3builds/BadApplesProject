@@ -8,6 +8,7 @@ from kivy import utils
 from android_app.utilities import SwipeListener, Produce
 from operator import itemgetter, attrgetter, methodcaller
 from db.database import *
+
 kivy.require('1.11.1')
 
 
@@ -33,21 +34,35 @@ class LandingPage(Screen):
 class PantryPage(Screen):
     produce_list = []
 
+    # queries all produce from the database and appends them to produce_list
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        all_items = query_all_user_item()
+
+        for item in all_items:
+            self.produce_list.append(Produce(item))
+
     def on_enter(self, *args):
         self.ids.nav_bar.ids.pantry_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
+        self.reset_list()
+        # if len(self.produce_list) > len(self.ids.scrollable_menu.ids.grid_layout.children):
+        #      self.reset_list()
 
     def manual_entry_pressed(self):
-        self.produce_list.append(Produce(('blueberries', 21, 'fruit', 'berries', 'fridge', False, 2, 4, 'days')))
-        insert_user_table((self.produce_list[-1]).return_as_tuple())
-        # self.produce_list.append(Produce(('wild blueberries', 24, 'fruit', 'berries', 'fridge', False, 1, 5, 'days')))
-        # self.produce_list.append(Produce(('strawberries', 22, 'fruit', 'berries', 'fridge', False, 1, 3, 'weeks')))
-        # self.produce_list.append(Produce(('blackberries', 23, 'fruit', 'berries', 'fridge', False, 2, 5, 'months')))
-        # self.produce_list = sorted(self.produce_list, key=itemgetter(6), reverse=False)
-        # for produce in self.produce_list:
-        #     print(str(produce.expirationLowerBound) + " " + produce.expirationUnitType)
+        into = ('blueberries', 457, 'fruit', 'berries', 'fridge', False, 1, 4, 'days')
+        if not insert_user_table(into):
+            print("Unable to add. Item with id already exists")
+        else:
+            self.produce_list.append(Produce(into))
+            self.reset_list()
 
+    # sorts produce_list, clears the scroll_menu, then adds all items from produce_list to scroll_menu+
+    def reset_list(self):
+        self.produce_list = sorted(self.produce_list, key=itemgetter(6), reverse=False)
+        self.ids.scroll_menu.ids.grid_layout.clear_widgets()
+        for item in self.produce_list:
 
-        self.ids.scroll_menu.add_to_menu('Apple', '2 Weeks', 1)  # TODO TEST ONLY
+            self.ids.scroll_menu.add_to_menu(str(item.itemName), (str(item.expirationLowerBound) + " " + str(item.expirationUnitType)), item.id)
 
 
 class IdeasPage(Screen):
@@ -71,9 +86,10 @@ class MenuItem(BoxLayout):
         self.ids.produce_label.text = name + ' (' + str(quantity) + ')'
         self.ids.expiration_label.text = time_remaining
 
-    #   Decreases the quantity of the MenuItem by one or deletes MenuItem if quantity is only one
-    # TODO Decrement by one
-    def decrement_quantity(self, *args):
+    def remove(self, *args):
+        calc_index = len(self.parent.children) - 1 - self.parent.children.index(self)
+        delete_user_item(self.parent.parent.parent.parent.produce_list[calc_index].id)
+        self.parent.parent.parent.parent.produce_list.pop(calc_index)  # removes item at calc_index from produce_list
         self.parent.remove_widget(self)
 
 

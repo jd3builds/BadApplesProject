@@ -1,29 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="expirations" uuid="5ea0d1f2-4356-49c0-86a6-e9b1109f241f">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\database\expirations.db</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="useritems" uuid="b639f65e-4585-4774-aebb-934d4461bd52">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\database\useritems.db</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="useritems [2]" uuid="0821f3a1-f6dc-4084-beba-55c0e06509bf">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\db\useritems.db</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="expirations [2]" uuid="743a8ee9-170a-4c2d-8792-7b20086fae0a">
+    <data-source source="LOCAL" name="expirations" uuid="48f901da-97cb-4853-80fc-40b84f634186">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:D:\BadApplesProject\db\expirations.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="SQLite - identifier.sqlite" uuid="79f1536c-c43d-4eef-b70a-80ba6d0a1aa6">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:identifier.sqlite</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="useritems" uuid="3b34fdf1-adf3-49e0-8524-b5aa5b21b5e0">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\db\useritems.db</jdbc-url>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>

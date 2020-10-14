@@ -142,13 +142,13 @@
     # Used Apple Button
     ImageButton:
         source: 'resources/red_apple_icon.png'
-        on_release: root.decrement_quantity()
+        on_release: root.remove()
         size_hint_x: .075
 
     # Expired Apple Button
     ImageButton:
         source: 'resources/brown_apple_icon.png'
-        on_release: root.decrement_quantity()
+        on_release: root.remove()
         size_hint_x: .075
 
     # Padding
