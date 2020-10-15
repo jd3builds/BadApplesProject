@@ -437,12 +437,6 @@ def levenshtein(s, t):
     Ratio = ((len(s)+len(t)) - distance[row][col]) / (len(s)+len(t))
     return Ratio
 
-# def insert_user_table(item):
-#     sql_insert_user_table = """INSERT INTO user_items (itemName, id, category, subcategory, storageType,
-#                                                             unopened, expirationLowerBound, expirationUpperBound,
-#                                                             expirationUnitType) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-
-
 def match_item(raw_item):
     sql_query_all_item = """SELECT * FROM general_items"""
 
