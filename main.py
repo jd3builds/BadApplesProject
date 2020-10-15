@@ -2,6 +2,14 @@ import kivy
 from kivy.app import App
 from kivy.lang import Builder
 from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.core.window import Window
+import os
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+import pytesseract
+#pytesseract.pytesseract.tesseract_cmd = r'./venv/Lib/site-packages/pytesseract'
 
 kivy.require('1.11.1')
 
@@ -18,20 +26,13 @@ class Manager(ScreenManager):
     pass
 
 
+
 class LandingPage(Screen):
     def capture(self):
         camera = self.ids['camera']
-        camera.export_to_png("IMG_TEST.png")
+        camera.export_to_png("IMG_TEST.png") #todo make a file name
         print("Captured")
-
-
-
-        '''file_name = "test.png"
-        camera.take_picture(filename=file_name, on_complete=self.camera_callback(file_name))
-        try:
-            camera.take_picture(filename=file_name, on_complete=self.camera_callback(file_name))
-        except NotImplementedError:
-            print("camera not implemented on this platform")'''
+        #print(pytesseract.image_to_string(Image.open('IMG_TEST.png')))
     pass
 
 

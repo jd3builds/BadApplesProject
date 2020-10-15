@@ -18,28 +18,13 @@ Manager:
 <LandingPage>:
     name: 'landing'
 
-    # Background
-    canvas.before:
-        Color:
-            rgba: utils.get_color_from_hex("#FFFFFF") # TODO replace w/ camera image
-        Rectangle:
-            pos: self.pos
-            size: self.size
+    Camera:
+        id: camera
+        resolution: (self.size[0],self.size[1])
+        play:True
 
     BoxLayout:
         orientation: 'vertical'
-
-
-        # Flip Camera Button
-        BoxLayout:
-            orientation: 'horizontal'
-            size_hint_y: .1
-            Label:
-                size_hint_x: .8
-            ImageButton:
-                source: 'resources/flip_icon.png'
-                size_hint_x: .2
-                #on_release: app.root.current =  TODO flip camera
 
         Label: # TODO replace w/ camera
             size_hint_y: .7
@@ -48,22 +33,8 @@ Manager:
         ImageButton:
             source: 'resources/capture_icon.png'
             size_hint_y: .2
-            #on_release: root.take_shot() # TODO capture picture
+            on_release: root.capture()
 
-        Camera:
-            id: camera
-            resolution: (640,480)
-            play:False
-        ToggleButton:
-            text: 'Play'
-            on_press: camera.play = not camera.play
-            size_hint_y: None
-            height: '48dp'
-        Button:
-            text: 'Capture'
-            size_hint_y: None
-            height:'48dp'
-            on_press:root.capture()
         BoxLayout:
             orientation: 'horizontal'
             size_hint_y: .1
