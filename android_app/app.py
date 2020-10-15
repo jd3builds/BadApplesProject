@@ -66,7 +66,7 @@ class PantryPage(Screen):
         self.ids.scroll_menu.ids.grid_layout.clear_widgets()
         for item in self.produce_list:
             self.ids.scroll_menu.add_to_menu(str(item.itemName), (
-                        str((dt.fromisoformat(item.expirationDate) - dt.today()).days + 1) + ' day(s)'), item.id)
+                    str((dt.fromisoformat(item.expirationDate) - dt.today()).days + 1) + ' day(s)'), item.id)
 
     def reset_title(self, *args):
         self.ids.title_text.text = 'Pantry'
@@ -105,6 +105,7 @@ class InputPage(Screen):
             self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
             self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
             Clock.schedule_once(self.parent.children[0].reset_title, 3)
+        self.ids.produce_input.text = ''
 
 
 class MenuItem(BoxLayout):
@@ -126,6 +127,11 @@ class ScrollMenu(ScrollView):
     def add_to_menu(self, name, time_remaining, quantity=1):
         new_menu_item = MenuItem(name, time_remaining, quantity)
         self.ids.grid_layout.add_widget(new_menu_item)
+
+        # Change text color to red if expiration below threshold
+        if int(time_remaining.split()[0]) <= 3:
+            self.ids.grid_layout.children[0].ids.produce_label.color = utils.get_color_from_hex("#C40233")
+            self.ids.grid_layout.children[0].ids.expiration_label.color = utils.get_color_from_hex("#C40233")
 
 
 class BadApplesApp(App):

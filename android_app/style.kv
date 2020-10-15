@@ -27,7 +27,7 @@ Manager:
         orientation: 'vertical'
 
         Label:
-            size_hint_y: .7
+            size_hint_y: 1
 
         # Capture Button
         ImageButton:
@@ -37,7 +37,7 @@ Manager:
 
         BoxLayout:
             orientation: 'horizontal'
-            size_hint_y: .3
+            size_hint_y: .2
 
             # Pantry Button
             BoxLayout:
@@ -47,8 +47,8 @@ Manager:
                     on_release: app.root.current = 'pantry'
                 Label:
                     text: 'Pantry'
-                    color: utils.get_color_from_hex("#73AB84")
-                    font_size: 14
+                    color: utils.get_color_from_hex("#FFFFFF")
+                    font_size: 22
 
             # Ideas Button
             BoxLayout:
@@ -58,8 +58,8 @@ Manager:
                     on_release: app.root.current = 'ideas'
                 Label:
                     text: 'Ideas'
-                    color: utils.get_color_from_hex("#73AB84")
-                    font_size: 14
+                    color: utils.get_color_from_hex("#FFFFFF")
+                    font_size: 22
 
 
 <PantryPage>:
