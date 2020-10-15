@@ -1,6 +1,7 @@
 #kivy 1.11.1
 #:import utils kivy.utils
 #:import ScrollEffect kivy.effects.scroll.ScrollEffect
+#:import Factory kivy.factory.Factory
 
 # Image Button
 # For button alone define image attributes immediately below 'ImageButton' declaration.
@@ -179,9 +180,10 @@
 # Scroll Menu
 # Modification of ScrollView widget that allows for greater than one children.
 <ScrollMenu@ScrollView>:
-    #scroll_type: ['bars','content']
+    #scroll_type: ['content', 'bars']
     #effect_cls: ScrollEffect
     #min_overscroll: self.height
+    
     GridLayout:
         id: grid_layout
         size_hint_y: None

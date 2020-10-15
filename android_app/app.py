@@ -1,3 +1,5 @@
+from random import randint
+
 import kivy
 from kivy.app import App
 from kivy.lang import Builder
@@ -6,7 +8,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy import utils
 from android_app.utilities import SwipeListener, Produce
-from operator import itemgetter, attrgetter, methodcaller
+from operator import itemgetter
 from db.database import *
 
 kivy.require('1.11.1')
@@ -16,15 +18,22 @@ class Manager(ScreenManager):
     swipe_listener = SwipeListener(5)
 
     def on_touch_down(self, touch):
-        self.swipe_listener.set_initial(touch.x)
+        if self.current != 'input':
+            self.swipe_listener.set_initial(touch.x)
         super(Manager, self).on_touch_down(touch)  # Completes other on_touch_down arguments (buttons)
 
     def on_touch_up(self, touch, *args):
-        swipe_direction = self.swipe_listener.get_swipe_direction(touch.x)
+        swipe_direction = None
+        if self.current != 'input':
+            swipe_direction = self.swipe_listener.get_swipe_direction(touch.x)
         if swipe_direction == 'left':
             self.current = self.next()
+            if self.current == 'input':
+                self.current = self.next()
         elif swipe_direction == 'right':
             self.current = self.previous()
+            if self.current == 'input':
+                self.current = self.previous()
 
 
 class LandingPage(Screen):
@@ -49,7 +58,7 @@ class PantryPage(Screen):
         #      self.reset_list()
 
     def manual_entry_pressed(self):
-        into = ('blueberries', 457, 'fruit', 'berries', 'fridge', False, 1, 4, 'days')
+        into = ('blueberries', randint(0, 1000), 'fruit', 'berries', 'fridge', False, randint(1,60), 4, 'days')
         if not insert_user_table(into):
             print("Unable to add. Item with id already exists")
         else:
@@ -61,7 +70,6 @@ class PantryPage(Screen):
         self.produce_list = sorted(self.produce_list, key=itemgetter(6), reverse=False)
         self.ids.scroll_menu.ids.grid_layout.clear_widgets()
         for item in self.produce_list:
-
             self.ids.scroll_menu.add_to_menu(str(item.itemName), (str(item.expirationLowerBound) + " " + str(item.expirationUnitType)), item.id)
 
 
@@ -78,6 +86,15 @@ class SettingsPage(Screen):
 class AboutPage(Screen):
     def on_enter(self, *args):
         self.ids.nav_bar.ids.about_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
+
+
+class InputPage(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def print_test(self):
+        print(self.ids.produce_input.text)
+        self.parent.children[0].ids.title_text.text = 'Produce Added Successfully'
 
 
 class MenuItem(BoxLayout):
