@@ -1,0 +1,242 @@
+#kivy 1.11.1
+#:import utils kivy.utils
+#:import Transition kivy.uix.screenmanager
+#:import ButtonBehavior kivy.uix.behaviors
+#:include widgets.kv
+
+# TODO cite: https://icons8.com in about page
+
+Manager:
+    transition: Transition.NoTransition()
+    LandingPage:
+    PantryPage:
+    IdeasPage:
+    SettingsPage:
+    AboutPage:
+
+
+<LandingPage>:
+    name: 'landing'
+
+    # Background
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex("#FFFFFF") # TODO replace w/ camera image
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+
+
+        # Flip Camera Button
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+            Label:
+                size_hint_x: .8
+            ImageButton:
+                source: 'resources/flip_icon.png'
+                size_hint_x: .2
+                #on_release: app.root.current =  TODO flip camera
+
+        Label: # TODO replace w/ camera
+            size_hint_y: .7
+
+        # Capture Button
+        ImageButton:
+            source: 'resources/capture_icon.png'
+            size_hint_y: .2
+            #on_release: root.take_shot() # TODO capture picture
+
+        Camera:
+            id: camera
+            resolution: (640,480)
+            play:False
+        ToggleButton:
+            text: 'Play'
+            on_press: camera.play = not camera.play
+            size_hint_y: None
+            height: '48dp'
+        Button:
+            text: 'Capture'
+            size_hint_y: None
+            height:'48dp'
+            on_press:root.capture()
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .1
+
+            # Pantry Button
+            BoxLayout:
+                orientation: 'vertical'
+                ImageButton:
+                    source: 'resources/apple_icon_colored.png'
+                    on_release: app.root.current = 'pantry'
+                Label:
+                    text: 'Pantry'
+                    color: utils.get_color_from_hex("#73AB84")
+                    font_size: 14
+
+            # Ideas Button
+            BoxLayout:
+                orientation: 'vertical'
+                ImageButton:
+                    source: 'resources/light_icon_colored.png'
+                    on_release: app.root.current = 'ideas'
+                Label:
+                    text: 'Ideas'
+                    color: utils.get_color_from_hex("#73AB84")
+                    font_size: 14
+
+
+<PantryPage>:
+    name: 'pantry'
+
+    # Background
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex("#99D19C")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        # Title Bar
+        Label:
+            text: 'Pantry'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .1
+            font_size: 30
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex("#73AB84")
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+        # Content
+        Label:
+            text: 'content here'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .8
+
+        # Navigation Bar
+        ButtonBar:
+            size_hint_y: .15
+
+
+<IdeasPage>:
+    name: 'ideas'
+
+    # Background
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex("#99D19C")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        # Title Bar
+        Label:
+            text: 'Ideas'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .1
+            font_size: 30
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex("#73AB84")
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+        # Content
+        Label:
+            text: 'content here'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .8
+
+        # Navigation Bar
+        ButtonBar:
+            size_hint_y: .15
+
+
+<SettingsPage>:
+    name: 'settings'
+
+    # Background
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex("#99D19C")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        # Settings Bar
+        Label:
+            text: 'Settings'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .1
+            font_size: 30
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex("#73AB84")
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+        # Content
+        Label:
+            text: 'content here'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .8
+
+        # Navigation Bar
+        ButtonBar:
+            size_hint_y: .15
+
+<AboutPage>:
+    name: 'about'
+
+    # Background
+    canvas.before:
+        Color:
+            rgba: utils.get_color_from_hex("#99D19C")
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+
+        # Title Bar
+        Label:
+            text: 'About'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .1
+            font_size: 30
+            canvas.before:
+                Color:
+                    rgba: utils.get_color_from_hex("#73AB84")
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+
+        # Content
+        Label:
+            text: 'content here'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .8
+
+        # Navigation Bar
+        ButtonBar:
+            size_hint_y: .15
