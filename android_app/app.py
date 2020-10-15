@@ -58,11 +58,12 @@ class PantryPage(Screen):
         #      self.reset_list()
 
     def manual_entry_pressed(self):
-        into = ('blueberries', randint(0, 1000), 'fruit', 'berries', 'fridge', False, randint(1,60), 4, 'days')
+        rand_id = randint(0, 1000)
+        into = ('blueberries', rand_id, 'fruit', 'berries', 'fridge', False, randint(1,60), 4, 'days')
         if not insert_user_table(into):
             print("Unable to add. Item with id already exists")
         else:
-            self.produce_list.append(Produce(into))
+            self.produce_list.append(Produce(query_user_item_by_id(rand_id)[0]))
             self.reset_list()
 
     # sorts produce_list, clears the scroll_menu, then adds all items from produce_list to scroll_menu+
@@ -70,7 +71,7 @@ class PantryPage(Screen):
         self.produce_list = sorted(self.produce_list, key=itemgetter(6), reverse=False)
         self.ids.scroll_menu.ids.grid_layout.clear_widgets()
         for item in self.produce_list:
-            self.ids.scroll_menu.add_to_menu(str(item.itemName), (str(item.expirationLowerBound) + " " + str(item.expirationUnitType)), item.id)
+            self.ids.scroll_menu.add_to_menu(str(item.itemName), (str((dt.fromisoformat(item.expirationDate) - dt.today()).days + 1) + ' day(s)'), item.id)
 
 
 class IdeasPage(Screen):
@@ -92,9 +93,11 @@ class InputPage(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def print_test(self):
+    def text_entered(self):
         print(self.ids.produce_input.text)
+        # TODO if succesful
         self.parent.children[0].ids.title_text.text = 'Produce Added Successfully'
+        self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
 
 
 class MenuItem(BoxLayout):

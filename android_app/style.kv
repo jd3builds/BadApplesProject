@@ -298,28 +298,27 @@ Manager:
                     pos: self.pos
 
         # Content
-        Label:
-            size_hint_y: .4
         BoxLayout:
             orientation: 'horizontal'
-            size_hint_y: .2
-            Label:
-                text: 'Produce Type:'
-                color: utils.get_color_from_hex("#000501")
-                size_hint_x: .4
-            # Input Box
-            TextInput:
-                id: produce_input
-                multiline: False
-                hint_text: 'i.e. Apple'
-                input_type: 'text'
-                size_hint_x: .4
-                cursor_color: utils.get_color_from_hex("#73AB84")
-                text_color: utils.get_color_from_hex("#73AB84")
-            Label:
-                size_hint_x: .2
-        Label:
-            size_hint_y: .4
+            size_hint_y: .8
+            # Input
+            BoxLayout:
+                orientation: 'horizontal'
+                Label:
+                    text: 'Produce Type:'
+                    color: utils.get_color_from_hex("#000501")
+                    size_hint_x: .4
+                # Input Box
+                TextInput:
+                    id: produce_input
+                    multiline: False
+                    hint_text: 'i.e. Apple'
+                    input_type: 'text'
+                    size_hint_x: .4
+                    cursor_color: utils.get_color_from_hex("#73AB84")
+                    text_color: utils.get_color_from_hex("#73AB84")
+                Label:
+                    size_hint_x: .2
 
         # Button Bar
         BoxLayout:
@@ -361,7 +360,7 @@ Manager:
                     size_hint_y: .7
                     on_release:
                         app.root.current = 'pantry'
-                        root.print_test()
+                        root.text_entered()
 
                 Label:
                     text: 'Submit'

@@ -1,5 +1,8 @@
 import sqlite3
 from sqlite3 import Error
+import numpy as np
+from datetime import datetime as dt, date, timedelta
+import time
 
 
 # ----------------- HELPER FUNCTIONS ----------------- #
@@ -74,7 +77,8 @@ def create_user_table():
                                     unopened boolean,
                                     expirationLowerBound integer NOT NULL,
                                     expirationUpperBound integer,
-                                    expirationUnitType varchar NOT NULL
+                                    expirationUnitType varchar NOT NULL,
+                                    expirationDate datetime NOT NULL
                                     );"""
 
     connection = create_connection("useritems.db")
@@ -152,9 +156,26 @@ def insert_general_table(item):
 # Inserts item in user_items table in useritems.db file
 # Returns True on successful insertion, returns False otherwise
 def insert_user_table(item):
+
+    normal_days = 0
+
+    if item[8] == 'days':
+        normal_days = item[6]
+    elif item[8] == 'weeks':
+        normal_days = item[6] * 7
+    elif item[8] == 'months':
+        normal_days = item[6] * 30
+    elif item[8] == 'years':
+        normal_days = item[6] * 365
+
+    expirationDate = date.today() + timedelta(days=normal_days)
+    item = list(item)
+    item.append(expirationDate)
+    item = tuple(item)
+
     sql_insert_user_table = """INSERT INTO user_items (itemName, id, category, subcategory, storageType, 
                                                             unopened, expirationLowerBound, expirationUpperBound,
-                                                            expirationUnitType) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                                                            expirationUnitType, expirationDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
     connection = create_connection("useritems.db")
 
@@ -242,7 +263,8 @@ def update_user_table(item):
                                             unopened = ? ,
                                             expirationLowerBound = ? ,
                                             expirationUpperBound = ? ,
-                                            expirationUnitType = ?
+                                            expirationUnitType = ?,
+                                            expirationDate = ?
                                         WHERE itemName = ?"""
 
     connection = create_connection("useritems.db")
@@ -429,10 +451,53 @@ def delete_all_storage_types():
         return False
 
 
+def levenshtein(s, t):
+    rows = len(s)+1
+    cols = len(t)+1
+    distance = np.zeros((rows,cols), dtype = int)
+
+    for i in range(1, rows):
+        for k in range(1,cols):
+            distance[i][0] = i
+            distance[0][k] = k
+
+    for col in range(1, cols):
+        for row in range(1, rows):
+            if s[row-1] == t[col-1]:
+                cost = 0
+            else:
+                cost = 2
+            distance[row][col] = min(distance[row-1][col] + 1,      # Cost of deletions
+                                 distance[row][col-1] + 1,          # Cost of insertions
+                                 distance[row-1][col-1] + cost)     # Cost of substitutions
+    Ratio = ((len(s)+len(t)) - distance[row][col]) / (len(s)+len(t))
+    return Ratio
+
+
+def match_item(raw_item):
+    sql_query_all_item = """SELECT * FROM general_items"""
+
+    connection = create_connection("expirations.db")
+
+    if connection is not None:
+        curs = execute_sql(connection, sql_query_all_item, (), commit=False)
+        results = curs.fetchall()
+        max = -1
+        curr = None
+        for i in results:
+            ratio = levenshtein(i[0], raw_item).item()
+            if ratio > max:
+                curr = i
+                max = ratio
+        insert_user_table(curr)
+        return results
+    else:
+        print("Unable to create expirations.db.")
+        return None
+
+
 if __name__ == "__main__":
-    create_general_table()
+    # create_general_table()
     create_user_table()
-    create_storage_type_table()
-    create_category_table()
-    create_subcategory_table()
     insert_user_table(('blueberries', 21, 'fruit', 'berries', 'fridge', False, 2, 4, 'days'))
+    #print(match_item('blueberries'))

@@ -30,7 +30,7 @@ class Produce:
 
     def __init__(self, item):
         self.__itemName, self.__id, self.__category, self.__subcategory, self.__storageType, self.__unopened, \
-        self.__expirationLowerBound, self.__expirationUpperBound, self.__expirationUnitType = item
+        self.__expirationLowerBound, self.__expirationUpperBound, self.__expirationUnitType, self.__expirationDate = item
 
     def __getitem__(self, item):
         return getattr(self, 'expirationLowerBound')
@@ -48,9 +48,13 @@ class Produce:
         return self.__expirationUnitType
 
     @property
+    def expirationDate(self):
+        return self.__expirationDate
+
+    @property
     def id(self):
         return self.__id
 
     def return_as_tuple(self):
         return (self.__itemName, self.__id, self.__category, self.__subcategory, self.__storageType, self.__unopened, \
-        self.__expirationLowerBound, self.__expirationUpperBound, self.__expirationUnitType)
+        self.__expirationLowerBound, self.__expirationUpperBound, self.__expirationUnitType, self.__expirationDate)
