@@ -1,14 +1,12 @@
-from random import randint
-
 import kivy
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy import utils
 from android_app.utilities import SwipeListener, Produce
-from operator import itemgetter
 from db.database import *
 
 kivy.require('1.11.1')
@@ -37,7 +35,10 @@ class Manager(ScreenManager):
 
 
 class LandingPage(Screen):
-    pass
+    def capture(self):
+        camera = self.ids['camera']
+        camera.export_to_png("IMG_TEST.png")
+        print("Captured")
 
 
 class PantryPage(Screen):
@@ -57,21 +58,19 @@ class PantryPage(Screen):
         # if len(self.produce_list) > len(self.ids.scrollable_menu.ids.grid_layout.children):
         #      self.reset_list()
 
-    def manual_entry_pressed(self):
-        rand_id = randint(0, 1000)
-        into = ('blueberries', rand_id, 'fruit', 'berries', 'fridge', False, randint(1,60), 4, 'days')
-        if not insert_user_table(into):
-            print("Unable to add. Item with id already exists")
-        else:
-            self.produce_list.append(Produce(query_user_item_by_id(rand_id)[0]))
-            self.reset_list()
-
     # sorts produce_list, clears the scroll_menu, then adds all items from produce_list to scroll_menu+
     def reset_list(self):
-        self.produce_list = sorted(self.produce_list, key=itemgetter(6), reverse=False)
+        self.produce_list = sorted(self.produce_list,
+                                   key=lambda x: int((dt.fromisoformat(x.expirationDate) - dt.today()).days),
+                                   reverse=False)
         self.ids.scroll_menu.ids.grid_layout.clear_widgets()
         for item in self.produce_list:
-            self.ids.scroll_menu.add_to_menu(str(item.itemName), (str((dt.fromisoformat(item.expirationDate) - dt.today()).days + 1) + ' day(s)'), item.id)
+            self.ids.scroll_menu.add_to_menu(str(item.itemName), (
+                        str((dt.fromisoformat(item.expirationDate) - dt.today()).days + 1) + ' day(s)'), item.id)
+
+    def reset_title(self, *args):
+        self.ids.title_text.text = 'Pantry'
+        self.ids.title_text.color = utils.get_color_from_hex('#000000')
 
 
 class IdeasPage(Screen):
@@ -94,10 +93,18 @@ class InputPage(Screen):
         super().__init__(**kwargs)
 
     def text_entered(self):
-        print(self.ids.produce_input.text)
-        # TODO if succesful
-        self.parent.children[0].ids.title_text.text = 'Produce Added Successfully'
-        self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+        ret_item = match_item(self.ids.produce_input.text)
+        if ret_item is not None:
+            id_ret = insert_user_table(ret_item)
+            self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
+            self.parent.children[0].reset_list()
+            self.parent.children[0].ids.title_text.text = 'Produce Added Successfully!'
+            self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)
+        else:
+            self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
+            self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)
 
 
 class MenuItem(BoxLayout):

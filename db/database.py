@@ -159,18 +159,28 @@ def insert_user_table(item):
 
     normal_days = 0
 
-    if item[8] == 'days':
+    if item[8] == 'Days' or item[8] == 'days':
         normal_days = item[6]
-    elif item[8] == 'weeks':
+    elif item[8] == 'Weeks' or item[8] == 'weeks':
         normal_days = item[6] * 7
-    elif item[8] == 'months':
+    elif item[8] == 'Months' or item[8] == 'months':
         normal_days = item[6] * 30
-    elif item[8] == 'years':
+    elif item[8] == 'Years' or item[8] == 'years':
         normal_days = item[6] * 365
 
     expirationDate = date.today() + timedelta(days=normal_days)
     item = list(item)
     item.append(expirationDate)
+
+    results = query_all_user_item()
+    i = 0
+    for res in results:
+        if res[1] == i:
+            i += 1
+        else:
+            break
+
+    item[1] = i
     item = tuple(item)
 
     sql_insert_user_table = """INSERT INTO user_items (itemName, id, category, subcategory, storageType, 
@@ -180,7 +190,7 @@ def insert_user_table(item):
     connection = create_connection("useritems.db")
 
     if connection is not None:
-        return True if execute_sql(connection, sql_insert_user_table, item) is not None else False
+        return item[1] if execute_sql(connection, sql_insert_user_table, item) is not None else False
     else:
         print("Unable to create useritems.db connection.")
         return False
@@ -489,8 +499,7 @@ def match_item(raw_item):
             if ratio > max:
                 curr = i
                 max = ratio
-        insert_user_table(curr)
-        return results
+        return curr
     else:
         print("Unable to create expirations.db.")
         return None
@@ -499,5 +508,3 @@ def match_item(raw_item):
 if __name__ == "__main__":
     # create_general_table()
     create_user_table()
-    insert_user_table(('blueberries', 21, 'fruit', 'berries', 'fridge', False, 2, 4, 'days'))
-    #print(match_item('blueberries'))
