@@ -26,6 +26,17 @@ class SwipeListener:
         return None
 
 
+def valid_string(str):
+    if not str:
+        return False
+    not_empty = False
+    # print(str)
+    for c in str:
+        if (c <= 'z' and c >= 'a') or (c <= 'Z' and c >= 'A'):
+            not_empty = True
+    return not_empty
+
+
 class Produce:
 
     def __init__(self, item):

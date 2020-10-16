@@ -1,18 +1,29 @@
+import re
+
 import kivy
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
+from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy import utils
-from android_app.utilities import SwipeListener, Produce
+from android_app.utilities import SwipeListener, Produce, valid_string
 from db.database import *
+import cv2
+
+from PIL import Image
+
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = r'../pytesseract/tesseract'
 
 kivy.require('1.11.1')
 
 
 class Manager(ScreenManager):
+
     swipe_listener = SwipeListener(5)
 
     def on_touch_down(self, touch):
@@ -35,10 +46,12 @@ class Manager(ScreenManager):
 
 
 class LandingPage(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
     def capture(self):
         camera = self.ids['camera']
-        camera.export_to_png("IMG_TEST.png")
-        print("Captured")
+        camera.export_to_png("IMG_SCANNED.png")
 
 
 class PantryPage(Screen):
@@ -55,8 +68,6 @@ class PantryPage(Screen):
     def on_enter(self, *args):
         self.ids.nav_bar.ids.pantry_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
         self.reset_list()
-        # if len(self.produce_list) > len(self.ids.scrollable_menu.ids.grid_layout.children):
-        #      self.reset_list()
 
     # sorts produce_list, clears the scroll_menu, then adds all items from produce_list to scroll_menu+
     def reset_list(self):
@@ -71,6 +82,37 @@ class PantryPage(Screen):
     def reset_title(self, *args):
         self.ids.title_text.text = 'Pantry'
         self.ids.title_text.color = utils.get_color_from_hex('#000000')
+
+    def read_image(self):
+        ret_str = pytesseract.image_to_string(Image.open('IMG_SCANNED.png'))
+        ret_str = ret_str.lower()
+
+        re.sub(r'[^A-Za-z ]+', '', ret_str)
+        list_entries = ret_str.splitlines()
+        list_entries = list(filter(lambda item: valid_string(item), list_entries))
+        if len(list_entries) == 0:
+            self.ids.title_text.text = 'Scan Failed!'
+            self.ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)
+        for item in list_entries:
+            self.text_passed(text=item)
+
+    def text_passed(self, text=None):
+        if text is None:
+            ret_item = match_item(self.ids.produce_input.text)
+        else:
+            ret_item = match_item(text)
+        if ret_item is not None:
+            id_ret = insert_user_table(ret_item)
+            self.produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
+            self.reset_list()
+            self.ids.title_text.text = 'Produce Added Successfully!'
+            self.ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)
+        else:
+            self.ids.title_text.text = 'Failed to Add Produce!'
+            self.ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)
 
 
 class IdeasPage(Screen):
@@ -92,8 +134,23 @@ class InputPage(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def text_entered(self):
-        ret_item = match_item(self.ids.produce_input.text)
+    def read_image(self):
+        ret_str = pytesseract.image_to_string(Image.open('IMG_SCANNED.png'))
+        ret_str.split()
+        re.sub(r'[^A-Za-z ]+', '', ret_str)
+        list_entries = ret_str.splitlines()
+        list_entries = list(filter(lambda item: valid_string(item), list_entries))
+        print(list_entries)
+        for item in list_entries:
+            self.text_entered(text=item)
+
+    def text_entered(self, text=None):
+        print('self', type(self))
+        print('self.parent', self.parent)
+        if text is None:
+            ret_item = match_item(self.ids.produce_input.text)
+        else:
+            ret_item = match_item(text)
         if ret_item is not None:
             id_ret = insert_user_table(ret_item)
             self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
@@ -105,13 +162,12 @@ class InputPage(Screen):
             self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
             self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
             Clock.schedule_once(self.parent.children[0].reset_title, 3)
-        self.ids.produce_input.text = ''
 
 
 class MenuItem(BoxLayout):
     def __init__(self, name, time_remaining, quantity=1, **kwargs):
         super().__init__(**kwargs)
-        self.ids.produce_label.text = name + ' (' + str(quantity) + ')'
+        self.ids.produce_label.text = name
         self.ids.expiration_label.text = time_remaining
 
     def remove(self, *args):

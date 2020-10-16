@@ -3,6 +3,10 @@ Name:
 Date(s):
 Description:
 
+Name: John Dillon **
+Date(s): Week 3
+Description: Pair programmed with Joe using Code With Me. Thus, all of my code from this week is under his pushes.
+
 Name: John Dillon
 Date(s): 10/3/2020
 Description: Created workflow for cloning repo and setting up python3.8 and venv.
@@ -22,3 +26,8 @@ Description: Created all database schemas, tables, and files. Created functional
 Name: Pablo Estrada
 Date(s): 10/7-10/12/2020
 Descriptiom: Researching sites with food expiration information. Wrote scraper to get fruit information from https://www.eatbydate.com/. Uploaded data to the database. Merged backend branch.
+
+Name: Joseph Brody, John Dillon
+Date(s): 10/14/2020
+Description: Integrated database with front-end. Insertion and removal of fruit from front end synced with database.
+
