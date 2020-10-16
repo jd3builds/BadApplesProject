@@ -4,14 +4,12 @@ import kivy
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
-from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy import utils
 from android_app.utilities import SwipeListener, Produce, valid_string
-from db.database import *
-import cv2
+from android_app.database import *
 
 from PIL import Image
 
@@ -86,6 +84,7 @@ class PantryPage(Screen):
     def read_image(self):
         ret_str = pytesseract.image_to_string(Image.open('IMG_SCANNED.png'))
         ret_str = ret_str.lower()
+        ret_str = ret_str.lower()
 
         re.sub(r'[^A-Za-z ]+', '', ret_str)
         list_entries = ret_str.splitlines()
@@ -140,13 +139,10 @@ class InputPage(Screen):
         re.sub(r'[^A-Za-z ]+', '', ret_str)
         list_entries = ret_str.splitlines()
         list_entries = list(filter(lambda item: valid_string(item), list_entries))
-        print(list_entries)
         for item in list_entries:
             self.text_entered(text=item)
 
     def text_entered(self, text=None):
-        print('self', type(self))
-        print('self.parent', self.parent)
         if text is None:
             ret_item = match_item(self.ids.produce_input.text)
         else:
