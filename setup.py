@@ -21,8 +21,8 @@ else:
             install_requires = file.read().splitlines()
 
 setuptools.setup(
-    name="BA-produce-tracker",
-    version="0.0.4",
+    name="BA_produce_tracker",
+    version="0.0.1",
     author="Brody, Joseph // Dillon, John // Estrada, Pablo // Todd, Alexis // Garcia, Marissa",
     url="https://github.com/jd3builds/BadApplesProject",
     description="Produce expiration tracker",
