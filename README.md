@@ -13,11 +13,24 @@ The first step to use our application is to upload grocery or item receipts. The
 
 After the upload process, the user will be able to look at their items and view information of interest (such as expiration dates). There will be notifications implemented in the future, so the user is notified when the item is about to expire. 
 
+### Technologies Used
+- Kivy v2.0.0
+- Python v3.7
+- SQLite
+- Pytesseract
+- Numpy
+
+### Pitch
+
+If you would like a quick overview of the concept/idea before development, you can view this [elevation pitch](https://www.youtube.com/watch?v=OB2ZTpWcwHo) about the project.
+
 # Package Name for PIP:
 
     pip install our-package-name
 
 # Initialization & Run Commands:
+
+    todo
 
 # Source Code
 https://github.com/jd3builds/BadApplesProject/tree/master
