@@ -22,7 +22,7 @@ After the upload process, the user will be able to look at their items and view 
 
 ### Pitch
 
-If you would like a quick overview of the concept/idea before development, you can view this [elevation pitch](https://www.youtube.com/watch?v=OB2ZTpWcwHo) about the project.
+If you would like a quick overview of the concept/idea before development, you can view this [elevator pitch](https://www.youtube.com/watch?v=OB2ZTpWcwHo) about the project.
 
 # Package Name for PIP:
 
