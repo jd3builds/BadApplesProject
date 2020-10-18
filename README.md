@@ -13,6 +13,8 @@ The first step to use our application is to upload grocery or item receipts. The
 
 After the upload process, the user will be able to look at their items and view information of interest (such as expiration dates). There will be notifications implemented in the future, so the user is notified when the item is about to expire. 
 
+Currently, our application can be tested with the following produce: fresh apples, blueberries, grapes, and bananas.
+
 ### Technologies Used
 - Kivy v2.0.0
 - Python v3.7
