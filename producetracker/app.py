@@ -203,6 +203,8 @@ class BadApplesApp(App):
         root = Builder.load_file(os.path.join(os.path.dirname(__file__), 'style.kv'))
         return root
 
+def main():
+    BadApplesApp().run()
 
 if __name__ == "__main__":
-    BadApplesApp().run()
+    main()
