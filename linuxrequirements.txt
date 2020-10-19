@@ -34,3 +34,5 @@ toml==0.10.1
 urllib3==1.25.10
 wheel==0.35.1
 zipp==3.3.0
+xclip==0.13-1
+xsel==1.2.0+git9bfc13d.20180109-3
