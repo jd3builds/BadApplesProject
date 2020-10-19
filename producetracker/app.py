@@ -9,14 +9,10 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy import utils
 from producetracker.utilities import SwipeListener, Produce, valid_string
+from productetracker.install import installer
 from producetracker.database import *
 import os.path
 import sys
-# basepath = os.path.dirname(os.path.abspath(__file__))
-# sys.path.insert(0, basepath)
-
-print("Path is ***************************")
-print(os.path.join(os.path.dirname(__file__), 'resources'))
 
 import kivy.resources
 kivy.resources.resource_add_path(os.path.join(os.path.dirname(__file__), 'resources'))
@@ -198,12 +194,11 @@ class ScrollMenu(ScrollView):
 
 class BadApplesApp(App):
     def build(self):
-        print("FILE IS " + str(__file__))
-        print(os.path.join(os.path.dirname(__file__), 'style.kv'))
         root = Builder.load_file(os.path.join(os.path.dirname(__file__), 'style.kv'))
         return root
 
 def main():
+    installer()
     BadApplesApp().run()
 
 if __name__ == "__main__":
