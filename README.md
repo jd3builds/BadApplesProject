@@ -22,7 +22,6 @@ Currently, our application can be tested with the following produce: fresh apple
 ![Manual Entry Screen](https://user-images.githubusercontent.com/55852769/96529598-9a956680-1253-11eb-8eb8-d9b14b797f50.png)
 <p align="center">
   <img width="399" height="299" src="https://user-images.githubusercontent.com/55852769/96529666-cc0e3200-1253-11eb-8c75-8d779ab9d405.png">
-  <h1 style="text-align:center;">Centered Heading</h1>
 </p>
 
 
