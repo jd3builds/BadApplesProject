@@ -48,12 +48,12 @@ We are testing the project using an image of Ubuntu 20.0.4 in VMware, using this
 
 Make sure your camera is working and accessible on the VM. Our application uses the camera, so it'll crash without a camera provider.
 
-    Make sure you have pip3 installed
+    # Make sure you have pip3 installed
     
     # install the pip module and dependences
-    pip3 install BAproducetracker==0.0.15
+    pip3 install BAproducetracker==0.0.16
     
-    Run the application (*)
+    # Run the application (*)
     ~/.local/bin/bapt
     
 (*) This step will also install a couple dependencies (Tesseract, xclip). It will ask for user password to install these dependencies. If the GUI says 'Python is not responding', don't press 'Force Quit' for the application, instead press 'Wait'. 
