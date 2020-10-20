@@ -15,9 +15,18 @@ Name: John Dillon
 Date(s): 10/3/2020
 Description: Will help Pablo and Marissa set up their environments. Pablo had to set up Bootcamp and Marissa could not attend 10/3 meeting.
 
+Name: Alexis Todd, Marissa Garcia
+Date(s): 10/04/2020
+Description: Worked with Marissa to set up her environment
+
 Name: Alexis Todd, Joseph Brody
 Date(s): 10/5/2020
 Description: Created basic designs of app pages https://docs.google.com/document/d/1sv_TKiqEEEqmsqKLMlbSyL_gELXSHquFLsLVeAncflc/edit?usp=sharing
+
+Name: Alexis Todd
+Date(s): 10/07/2020, 10/11/2020
+Description: Worked with tesseract and learned how to parse images to text file for integration with project
+Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/EfVq1JTg5qZNnXaD9vW3ALsBUN0BOsjuFvBI00sb197diQ?e=lyEpgI
 
 Name: John Dillon
 Date(s): 10/8-10/11/2020
@@ -25,9 +34,46 @@ Description: Created all database schemas, tables, and files. Created functional
 
 Name: Pablo Estrada
 Date(s): 10/7-10/12/2020
-Descriptiom: Researching sites with food expiration information. Wrote scraper to get fruit information from https://www.eatbydate.com/. Uploaded data to the database. Merged backend branch.
+Description: Researching sites with food expiration information. Wrote scraper to get fruit information from https://www.eatbydate.com/. Uploaded data to the database. Merged backend branch.
+
+Name: Alexis Todd, Joeseph Brody
+Dates(s): 10/11/2020
+Description: Met to first debug camera issue together
+
+Name: Alexis Todd
+Date(s): 10/11/2020
+Description: Worked with buildozer and the spec file to take project and package into apk file, checked functionality on phone and reptillianOS.
+APK file: https://uflorida-my.sharepoint.com/:u:/g/personal/alexis_todd_ufl_edu/EVl5bBf3wyRKnDeWmShCeekBPqOVW0AvQJRkl7zOT25Nvw?e=F6Wwbq
+Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/Ee7MNXgeMpNDryUFHyH_APMB80ata4JzwcLayBvd-ECo4A?e=kLWIND
+
+Name: Marissa Garcia
+Date(s): 10/11/2020
+Description: Added a file for testing and refactoring
+Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/EVlkNyqtpExHkTOFrin3vtsBSeJCAFzZGw8AYfscZlCEzQ?e=wTGyHl
+
+Name: Alexis Todd, John Dillon, Joeseph Brody
+Date(s): 10/13/2020 - 10/14/2020
+Description: Had a 6 hour group meeting where I worked on camera debug and John and Joeseph worked on integrating frontend and backend
+Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/Ear7NkEnEa5Gl481CEihKOEBlF8TZKVd_kLMoADALuPxpg?e=NrKW59
+
+Name: Alexis Todd
+Date(s): 10/14/2020
+Description: Continued debugging camera and made a breakthrough. 
+Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/EW0G9UsE99hClnC7Mf9tcZcBIYBkdSYSuL8824KWEcX7cg?e=aDaPDl
 
 Name: Joseph Brody, John Dillon
 Date(s): 10/14/2020
 Description: Integrated database with front-end. Insertion and removal of fruit from front end synced with database.
+
+Name: Alexis Todd, Marissa Garcia
+Date(s): 10/15/2020
+Description: Worked with Marissa on Tesseract and successfully integrated scanner functionality into the project
+Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/ETQ8u9Pdo69JpZwwdAskCWQBJlJhRNYOucXEcf4lnkwpsw?e=SsHYBH
+
+Name: Alexis Todd, Marissa Garcia
+Date(s): 10/19/2020
+Description: Worked with Marissa on framework of powerpoint slide to pass onto team
+Powerpoint: https://uflorida-my.sharepoint.com/:p:/g/personal/alexis_todd_ufl_edu/EUc9sYibOkNPsAbtbtkvfEMBh5JAJZoaiXCichwHBePIXQ?e=Les7G3
+
+
 
