@@ -38,13 +38,25 @@ Currently, our application can be tested with the following produce: fresh apple
 
 If you would like a quick overview of the concept/idea before development, you can view this [elevator pitch](https://www.youtube.com/watch?v=OB2ZTpWcwHo) about the project.
 
-# Package Name for PIP:
+# Package Name
 
-    pip install our-package-name
+The package is hosted in PyPi, called [BAproducetracker](https://pypi.org/project/BAproducetracker/)
 
-# Initialization & Run Commands:
 
-    todo
+# Initialization & Run Commands
+We are testing the project using an image of Ubuntu 20.0.4 in VMware, using this [build](https://www.osboxes.org/ubuntu/#ubuntu-20-04-vmware).
+
+Make sure your camera is working and accessible on the VM. Our application uses the camera, so it'll crash without a camera provider.
+
+    Make sure you have pip3 installed
+    
+    # install the pip module and dependences
+    pip3 install BAproducetracker==0.0.15
+    
+    Run the application (*)
+    ~/.local/bin/bapt
+    
+(*) This step will also install a couple dependencies (Tesseract, xclip). It will ask for user password to install these dependencies. If the GUI says 'Python is not responding', don't press 'Force Quit' for the application, instead press 'Wait'. 
 
 # Source Code
 https://github.com/jd3builds/BadApplesProject/tree/master
