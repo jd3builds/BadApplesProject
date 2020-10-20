@@ -23,7 +23,6 @@ def execute_sql(connection, sql, data=None, commit=True):
             connection.commit()
         return curs
     except Error as err:
-        print("--------- UNABLE TO SETUP CONNECTION -----")
         print(err)
         return None
 
@@ -33,12 +32,9 @@ def execute_sql(connection, sql, data=None, commit=True):
 
 # Takes in the name of the db file and returns a connection to that db file.
 def create_connection(db_file):
-    print("CREATING CONNECTIONG $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     connection = None
 
     try:
-        print("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
-        print(os.path.join(os.path.dirname(__file__), db_file))
         connection = sqlite3.connect(os.path.join(os.path.dirname(__file__), db_file))
         return connection
         # print(sqlite3.version) # can use to print version
@@ -144,7 +140,7 @@ def create_storage_type_table():
 # Inserts item in general_items table in expirations.db file
 # Returns True on successful insertion, returns False otherwise
 def insert_general_table(item):
-    sql_insert_general_table = """ INSERT INTO general_items (itemName, id, category, subcategory, storageType, 
+    sql_insert_general_table = """ INSERT INTO general_items (itemName, id, category, subcategory, storageType,
                                                             unopened, expirationLowerBound, expirationUpperBound,
                                                             expirationUnitType) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
@@ -187,7 +183,7 @@ def insert_user_table(item):
     item[1] = i
     item = tuple(item)
 
-    sql_insert_user_table = """INSERT INTO user_items (itemName, id, category, subcategory, storageType, 
+    sql_insert_user_table = """INSERT INTO user_items (itemName, id, category, subcategory, storageType,
                                                             unopened, expirationLowerBound, expirationUpperBound,
                                                             expirationUnitType, expirationDate) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
@@ -247,7 +243,7 @@ def insert_storage_type_table(storage_type):
 
 # Updates item in general_items table in expirations.db file
 def update_general_table(item):
-    sql_update_general_table = """ UPDATE general_items 
+    sql_update_general_table = """ UPDATE general_items
                                     SET id = ? ,
                                         category = ? ,
                                         subcategory = ? ,
@@ -269,7 +265,7 @@ def update_general_table(item):
 
 # Updates item in user_items table in useritems.db file
 def update_user_table(item):
-    sql_update_user_table = """ UPDATE user_items 
+    sql_update_user_table = """ UPDATE user_items
                                         SET id = ? ,
                                             category = ? ,
                                             subcategory = ? ,
@@ -292,7 +288,7 @@ def update_user_table(item):
 
 # Updates category in categories table in categories.db file
 def update_category_table(category):
-    sql_update_category_table = """UPDATE categories 
+    sql_update_category_table = """UPDATE categories
                                     SET category = ?
                                     WHERE id = ?"""
 
@@ -307,7 +303,7 @@ def update_category_table(category):
 
 # Updates subcategory in subcategories table in subcategories.db file
 def update_subcategory_table(subcategory):
-    sql_update_subcategory_table = """UPDATE subcategories 
+    sql_update_subcategory_table = """UPDATE subcategories
                                     SET subcategory = ?
                                     WHERE id = ?"""
 
@@ -342,7 +338,6 @@ def query_all_user_item():
     sql_query_user_item = """SELECT * FROM user_items"""
 
     connection = create_connection("useritems.db")
-    print("%%%%%%%%%%%%")
 
     if connection is not None:
         curs = execute_sql(connection, sql_query_user_item, commit=False)
