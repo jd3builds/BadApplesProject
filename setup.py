@@ -21,11 +21,20 @@ else:
             install_requires = file.read().splitlines()
 
 setuptools.setup(
-    name="BA_produce_tracker",
-    version="0.0.1",
+    name="BAproducetracker",
+    version="0.0.14",
     author="Brody, Joseph // Dillon, John // Estrada, Pablo // Todd, Alexis // Garcia, Marissa",
     url="https://github.com/jd3builds/BadApplesProject",
+    packages=['producetracker'],
+    package_data={ 'producetracker': ['*', 'resources/*.png'] },
+    include_package_data=False,
     description="Produce expiration tracker",
     python_requires='>=3.8',
-    install_requires=install_requires
+    install_requires=install_requires,
+
+    entry_points = {
+        'console_scripts': [
+            'bapt = producetracker.app:main'
+        ]
+    }
 )

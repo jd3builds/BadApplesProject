@@ -3,7 +3,7 @@ from sqlite3 import Error
 import numpy as np
 from datetime import datetime as dt, date, timedelta
 import time
-
+import os.path
 
 # ----------------- HELPER FUNCTIONS ----------------- #
 
@@ -23,6 +23,7 @@ def execute_sql(connection, sql, data=None, commit=True):
             connection.commit()
         return curs
     except Error as err:
+        print("--------- UNABLE TO SETUP CONNECTION -----")
         print(err)
         return None
 
@@ -32,10 +33,13 @@ def execute_sql(connection, sql, data=None, commit=True):
 
 # Takes in the name of the db file and returns a connection to that db file.
 def create_connection(db_file):
+    print("CREATING CONNECTIONG $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
     connection = None
 
     try:
-        connection = sqlite3.connect(db_file)
+        print("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF")
+        print(os.path.join(os.path.dirname(__file__), db_file))
+        connection = sqlite3.connect(os.path.join(os.path.dirname(__file__), db_file))
         return connection
         # print(sqlite3.version) # can use to print version
     except Error as err:
@@ -338,6 +342,7 @@ def query_all_user_item():
     sql_query_user_item = """SELECT * FROM user_items"""
 
     connection = create_connection("useritems.db")
+    print("%%%%%%%%%%%%")
 
     if connection is not None:
         curs = execute_sql(connection, sql_query_user_item, commit=False)

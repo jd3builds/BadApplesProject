@@ -8,14 +8,21 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
 from kivy import utils
-from android_app.utilities import SwipeListener, Produce, valid_string
-from android_app.database import *
+from producetracker.utilities import SwipeListener, Produce, valid_string
+# from producetracker.installer import installer
+from producetracker.database import *
+import os
+import os.path
+import sys
+
+import kivy.resources
+kivy.resources.resource_add_path(os.path.join(os.path.dirname(__file__), 'resources'))
 
 from PIL import Image
 
 import pytesseract
 
-pytesseract.pytesseract.tesseract_cmd = r'../pytesseract/tesseract'
+pytesseract.tesseract_cmd = r'../pytesseract/tesseract'
 
 kivy.require('1.11.1')
 
@@ -188,9 +195,15 @@ class ScrollMenu(ScrollView):
 
 class BadApplesApp(App):
     def build(self):
-        root = Builder.load_file('style.kv')
+        root = Builder.load_file(os.path.join(os.path.dirname(__file__), 'style.kv'))
         return root
 
+def main():
+    os.system("sudo apt-get install xclip xsel")
+    os.system("sudo apt install tesseract-ocr")
+    os.system("sudo apt-get remove gstreamer1.0-alsa gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-pulseaudio libgstreamer-plugins-bad1.0-0 libgstreamer-plugins-base1.0-0 libgstreamer-plugins-good1.0-0 libgstreamer1.0-0")
+
+    BadApplesApp().run()
 
 if __name__ == "__main__":
-    BadApplesApp().run()
+    main()

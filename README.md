@@ -19,8 +19,8 @@ Currently, our application can be tested with the following produce: fresh apple
 
 ### Technologies Used
 - Kivy v2.0.0
-- Python v3.7
-- SQLite
+- Python v3.8
+- SQLite3
 - Pytesseract
 - Numpy
 
