@@ -15,7 +15,7 @@ After the upload process, the user will be able to look at their items and view 
 
 Currently, our application can be tested with the following produce: fresh apples, blueberries, grapes, and bananas.
 
-[Imgur](https://imgur.com/VfMrXwY)
+![Image of Landing Screen](https://imgur.com/ZTx1m27)
 
 ### Technologies Used
 - Kivy v2.0.0
