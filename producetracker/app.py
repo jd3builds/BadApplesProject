@@ -22,7 +22,7 @@ from PIL import Image
 
 import pytesseract
 
-pytesseract.tesseract_cmd = r'../pytesseract/tesseract'
+pytesseract.pytesseract.tesseract_cmd = r'../pytesseract/tesseract'
 
 kivy.require('1.11.1')
 
@@ -122,7 +122,13 @@ class PantryPage(Screen):
 
 
 class IdeasPage(Screen):
-    def on_enter(self, *args):
+    history_list = []
+
+    def __init__(self, **kwargs): # TODO query db
+        super().__init__(**kwargs)
+        pass
+
+    def on_enter(self, *args): # TODO add history to menu
         self.ids.nav_bar.ids.ideas_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
 
 
@@ -173,13 +179,28 @@ class MenuItem(BoxLayout):
         self.ids.produce_label.text = name
         self.ids.expiration_label.text = time_remaining
 
+    # if not exist yet, add
+    # if exists, update
     def remove(self, *args):
         calc_index = len(self.parent.children) - 1 - self.parent.children.index(self)
+        holder = query_recent_expiration_item_by_id(self.parent.parent.parent.parent.produce_list[calc_index])
+
+        if holder is not None:
+            #update
+            update_recent_expirations_table(holder, args[0])
+        else:
+            #add TODO: Figure out how to create second param
+            insert_recent_expirations_table(holder, args[0])
+
+
         delete_user_item(self.parent.parent.parent.parent.produce_list[calc_index].id)
         self.parent.parent.parent.parent.produce_list.pop(calc_index)  # removes item at calc_index from produce_list
         self.parent.remove_widget(self)
 
 
+
+
+# Pantry ScrollMenu
 class ScrollMenu(ScrollView):
 
     # Adds a MenuItem to the ScrollMenu
@@ -193,15 +214,20 @@ class ScrollMenu(ScrollView):
             self.ids.grid_layout.children[0].ids.expiration_label.color = utils.get_color_from_hex("#C40233")
 
 
+
+class IdeasScrollMenu(ScrollView):
+    pass
+
+
 class BadApplesApp(App):
     def build(self):
         root = Builder.load_file(os.path.join(os.path.dirname(__file__), 'style.kv'))
         return root
 
 def main():
-    os.system("sudo apt-get install xclip xsel")
-    os.system("sudo apt install tesseract-ocr")
-    os.system("sudo apt-get remove gstreamer1.0-alsa gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-pulseaudio libgstreamer-plugins-bad1.0-0 libgstreamer-plugins-base1.0-0 libgstreamer-plugins-good1.0-0 libgstreamer1.0-0")
+    #os.system("sudo apt-get install xclip xsel")
+    #os.system("sudo apt install tesseract-ocr")
+    #os.system("sudo apt-get remove gstreamer1.0-alsa gstreamer1.0-libav gstreamer1.0-plugins-bad gstreamer1.0-plugins-base gstreamer1.0-plugins-good gstreamer1.0-plugins-ugly gstreamer1.0-pulseaudio libgstreamer-plugins-bad1.0-0 libgstreamer-plugins-base1.0-0 libgstreamer-plugins-good1.0-0 libgstreamer1.0-0")
 
     BadApplesApp().run()
 

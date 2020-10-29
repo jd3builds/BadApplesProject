@@ -146,13 +146,13 @@
     # Used Apple Button
     ImageButton:
         source: 'red_apple_icon.png'
-        on_release: root.remove()
+        on_release: root.remove(True)
         size_hint_x: .075
 
     # Expired Apple Button
     ImageButton:
         source: 'brown_apple_icon.png'
-        on_release: root.remove()
+        on_release: root.remove(False)
         size_hint_x: .075
 
     # Padding
@@ -180,13 +180,23 @@
         size_hint_x: .1
 
 
-# Scroll Menu
+# Pantry Scroll Menu
 # Modification of ScrollView widget that allows for greater than one children.
 <ScrollMenu@ScrollView>:
     GridLayout:
         id: grid_layout
         size_hint_y: None
         cols: 1
+
+
+# Ideas Scroll Menu
+# Modification of ScrollView widget that allows for greater than one children.
+<IdeasScrollMenu@ScrollView>:
+    GridLayout:
+        id: grid_layout
+        size_hint_y: None
+        cols: 1
+
 
 Manager:
     transition: Transition.NoTransition()
@@ -198,7 +208,6 @@ Manager:
     AboutPage:
     InputPage:
         id: input_page
-
 
 
 <LandingPage>:
@@ -355,10 +364,42 @@ Manager:
                     size: self.size
                     pos: self.pos
 
+        # Subtitle Bar
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: .05
+            Label:
+                size_hint_x: .15
+            Label:
+                text: 'Recommendation'
+                color: utils.get_color_from_hex("#000000")
+                bold: True
+                size_hint_x: .15
+            Label:
+                size_hint_x: .05
+            Label:
+                text: 'Item'
+                color: utils.get_color_from_hex("#000000")
+                bold: True
+                size_hint_x: .7
+            Label:
+                text: 'Recent Trend'
+                color: utils.get_color_from_hex("#000000")
+                bold: True
+                size_hint_x: .2
+
+            Label:
+                text: 'Lifetime Trend'
+                color: utils.get_color_from_hex("#000000")
+                bold: True
+                size_hint_x: .2
+            Label:
+                size_hint_x: .1
+
         # Content
-        Label:
-            color: utils.get_color_from_hex("#000501")
-            size_hint_y: .8
+        ScrollMenu
+            id: scroll_menu
+            size_hint_y: .75
 
         # Navigation Bar
         ButtonBar:

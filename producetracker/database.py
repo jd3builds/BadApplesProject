@@ -131,8 +131,23 @@ def create_storage_type_table():
     if connection is not None:
         execute_sql(connection, sql_create_storage_type_table, commit=False)
     else:
-        print("Unable to create storagetypes.db connection.")
+        print("Unable to create storagetypes.db connection")
 
+
+def create_recent_expirations_table():
+    sql_create_recent_expirations_table = """ CREATE TABLE IF NOT EXISTS recent_expirations(
+                                            id integer PRIMARY KEY,
+                                            name varchar NOT NULL,
+                                            10trend varchar(10) NOT NULL,
+                                            trend integer NOT NULL,
+                                        );"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        execute_sql(connection, sql_create_recent_expirations_table, commit=False)
+    else:
+        print("Unable to create useritems.db connection")
 
 # ----------------- INSERTION FUNCTIONS ----------------- #
 
@@ -238,10 +253,21 @@ def insert_storage_type_table(storage_type):
         return False
 
 
+def insert_recent_expirations_table(recent_exp):
+    sql_insert_recent_expirations_table = """INSERT INTO recent_expirations (id, name, 10trend, trend) VALUES(?, ?, ?, ?)"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        return True if execute_sql(connection, sql_insert_recent_expirations_table, recent_exp) is not None else False
+    else:
+        print("Unable to create useritems.db connection.")
+        return False
+
 # ----------------- UPDATE FUNCTIONS ----------------- #
 
 
-# Updates item in general_items table in expirations.db file
+# Updates item in general_items table in expirations.dbfile
 def update_general_table(item):
     sql_update_general_table = """ UPDATE general_items
                                     SET id = ? ,
@@ -331,6 +357,14 @@ def update_storage_type_table(storage_type):
         return False
 
 
+def update_recent_expirations_table(recent_exp, use):
+    sql_update_recent_expirations_table = """UPDATE recent_expirations
+                                            SET 10trend = ?,
+                                                trend = ?
+                                            WHERE id = ?
+                                            """
+
+
 # ----------------- QUERY FUNCTIONS ----------------- #
 
 
@@ -373,6 +407,34 @@ def query_user_item_by_name(name):
 
     if connection is not None:
         curs = execute_sql(connection, sql_query_user_item, (name,), commit=False)
+        results = curs.fetchall()
+        return results
+    else:
+        print("Unable to create useritems.db connection.")
+        return None
+
+
+def query_recent_expiration_item_by_id(id):
+    sql_query_recent_expiration_item = """SELECT * FROM recent_expirations WHERE id = ?"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        curs = execute_sql(connection, sql_query_recent_expiration_item, (id,), commit=False)
+        results = curs.fetchall()
+        return results
+    else:
+        print("Unable to create useritems.db connection.")
+        return None
+
+
+def query_all_recent_expiration_items():
+    sql_query_all_recent_expiration_items = """SELECT * FROM recent_expirations"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        curs = execute_sql(connection, sql_query_all_recent_expiration_items, commit=False)
         results = curs.fetchall()
         return results
     else:
