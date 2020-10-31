@@ -3,7 +3,7 @@ Avocados,Fresh Avocados
 Blueberries,Fresh Whole Blueberries
 Bananas,Fresh Bananas
 Cherries,Fresh Whole Cherries
-Coconuts,Fresh Coconuts 
+Coconuts,Fresh Coconuts last
 Figs,Fresh Figs
 Nectarines,Nectarines (Whole)
 Pineapples,Pineapple (Whole)

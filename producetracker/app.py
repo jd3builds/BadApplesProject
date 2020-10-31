@@ -1,6 +1,4 @@
 import re
-
-import kivy
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.lang import Builder
@@ -11,11 +9,9 @@ from kivy.uix.dropdown import DropDown
 from kivy.uix.button import Button
 from kivy import utils
 from producetracker.utilities import SwipeListener, Produce, valid_string
-# from producetracker.installer import installer
 from producetracker.database import *
 import os
 import os.path
-import sys
 
 import kivy.resources
 kivy.resources.resource_add_path(os.path.join(os.path.dirname(__file__), 'resources'))
@@ -159,10 +155,12 @@ class InputPage(Screen):
         self.parent.children[0].produce_passed(item_expirations)
 
 
+
+
 class StoragePage(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+    expirations = []
     def produce_passed(self, item_expirations):
         # if queried produce list is empty, continue to pantry and display failure
         if not item_expirations:
@@ -170,18 +168,26 @@ class StoragePage(Screen):
             self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
             Clock.schedule_once(self.parent.children[0].reset_title, 3)
         else:
-            self.select_storage_type(item_expirations)
+            self.expirations = item_expirations
+            for items in self.expirations:
+                print(items[4])
 
-    def select_storage_type(self, expirations):
-        print(expirations)
-        # id_ret = insert_user_table(expirations[0])
-        # self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
-        # self.parent.children[0].reset_list()
-        # self.parent.children[0].ids.title_text.text = 'Produce Added Successfully!'
-        # self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
-        # Clock.schedule_once(self.parent.children[0].reset_title, 3)
-        # produce_item = None
-        # return produce_item
+    def select_storage_type(self):
+        for produce in self.expirations:
+            if produce[4] == self.ids.storage_input.text:
+                id_ret = insert_user_table(produce)
+                self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
+                self.parent.children[0].reset_list()
+                self.parent.children[0].ids.title_text.text = 'Produce Added Successfully!'
+                self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+                Clock.schedule_once(self.parent.children[0].reset_title, 3)
+                return
+
+        self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
+        self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+        Clock.schedule_once(self.parent.children[0].reset_title, 3)
+
+
 
     def add_produce_item(self, produce_item):
         if produce_item is not None:
