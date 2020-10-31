@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from bs4 import Tag
-from android_app.database import insert_general_table
+from database import insert_general_table, delete_all_general_items
 
 counter = 0
 
@@ -87,12 +87,18 @@ def scrape_single_item_from_page(URL, general_name, category,subcategory):
                     pass
                     print("Unable to add item " + name)
                 else:
-                    item = (name, counter, category, subcategory, categories[i], unopened, ranges[0], ranges[1], ranges[2])
-                    items.append(items)
-                    insert_general_table(item)
-                    print("Inserted: " + str(item))
-                    counter += 1
+                    with open("accepted_produce_names.txt", "r") as file:
+                        for line in file:
+                            if name in line:
+                                print( "found " + name + " as " + line.split(",")[0] + " for " + categories[i])
+                                cleaned_name = line.split(",")[0]
+                                item = (cleaned_name, counter, category, subcategory, categories[i], unopened, ranges[0], ranges[1], ranges[2])
+                                items.append(items)
+                                insert_general_table(item)
+                                print("Inserted: " + str(item))
+                                counter += 1
 
 
 if __name__ == '__main__':
+    delete_all_general_items()
     scrape_category_of_items("https://www.eatbydate.com/fruits/fresh/", "Fruits", "Fresh Fruits")

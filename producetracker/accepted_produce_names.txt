@@ -1,0 +1,20 @@
+Apples,Fresh Apples
+Avocados,Fresh Avocados 
+Blueberries,Fresh Whole Blueberries
+Bananas,Fresh Bananas
+Cherries,Fresh Whole Cherries
+Coconuts,Fresh Coconuts 
+Figs,Fresh Figs
+Nectarines,Nectarines (Whole)
+Pineapples,Pineapple (Whole)
+Pumpkins,Fresh Pumpkins last
+Pomegranates,Pomegranates
+Strawberries,Fresh Whole Strawberries last
+Tomatoes,Fresh Tomatoes
+Grapes,Grapes
+Lemons,Fresh Lemons last
+Peaches,Peaches (Whole)
+Oranges,Fresh Oranges
+Limes,Fresh Limes last
+Apricots,Apricots (Whole)
+Cantaloupes,Cantaloupe (Whole)
