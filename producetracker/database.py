@@ -486,18 +486,18 @@ def levenshtein(s, t):
 
 def match_item(raw_item):
     sql_query_all_item = """SELECT * FROM general_items"""
-
     connection = create_connection("expirations.db")
-
     if connection is not None:
         curs = execute_sql(connection, sql_query_all_item, (), commit=False)
         results = curs.fetchall()
         max = -1
         curr = None
-        for i in results:
-            ratio = levenshtein(i[0], raw_item).item()
+
+        for database_item in results:
+            print(database_item)
+            ratio = levenshtein(database_item[0], raw_item).item()
             if ratio > max:
-                curr = i
+                curr = database_item
                 max = ratio
         return curr
     else:
