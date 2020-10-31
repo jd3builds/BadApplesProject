@@ -154,7 +154,7 @@ class InputPage(Screen):
             ret_item = match_item(self.ids.produce_input.text)
         else:
             ret_item = match_item(text)
-        if ret_item is not None:
+        '''if ret_item is not None:
             id_ret = insert_user_table(ret_item)
             self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
             self.parent.children[0].reset_list()
@@ -164,7 +164,12 @@ class InputPage(Screen):
         else:
             self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
             self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
-            Clock.schedule_once(self.parent.children[0].reset_title, 3)
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)'''
+
+class StoragePage(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
 
 
 class MenuItem(BoxLayout):
