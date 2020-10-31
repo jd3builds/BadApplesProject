@@ -364,19 +364,68 @@ def query_user_item_by_id(id):
         return None
 
 
-# Queries for a user_item based on if item name contains input
-# Returns
-def query_user_item_by_name(name):
-    sql_query_user_item = """SELECT * FROM user_items WHERE itemName LIKE '%'||?||'%'"""
+def levenshtein(s, t):
+    rows = len(s)+1
+    cols = len(t)+1
+    distance = np.zeros((rows,cols), dtype = int)
 
-    connection = create_connection("useritems.db")
+    for i in range(1, rows):
+        for k in range(1,cols):
+            distance[i][0] = i
+            distance[0][k] = k
 
+    for col in range(1, cols):
+        for row in range(1, rows):
+            if s[row-1] == t[col-1]:
+                cost = 0
+            else:
+                cost = 2
+            distance[row][col] = min(distance[row-1][col] + 1,      # Cost of deletions
+                                 distance[row][col-1] + 1,          # Cost of insertions
+                                 distance[row-1][col-1] + cost)     # Cost of substitutions
+    ratio = ((len(s)+len(t)) - distance[row][col]) / (len(s)+len(t))
+    return ratio
+
+
+def match_item(raw_item):
+    sql_query_all_item = """SELECT * FROM general_items"""
+    connection = create_connection("expirations.db")
     if connection is not None:
-        curs = execute_sql(connection, sql_query_user_item, (name,), commit=False)
+        curs = execute_sql(connection, sql_query_all_item, (), commit=False)
         results = curs.fetchall()
-        return results
+        max = -1
+        curr = None
+
+        for database_item in results:
+            ratio = levenshtein(database_item[0], raw_item).item()
+            if ratio > max:
+                curr = database_item
+                max = ratio
+        return curr
     else:
-        print("Unable to create useritems.db connection.")
+        print("Unable to create expirations.db.")
+        return None
+
+
+# Queries expiration data for an item name with different storage types
+# Matching algorithm for finding similar item names
+# Returns table results as a 2d array from the query
+def query_expirations_for_item(name):
+    found_item = match_item(name)
+    if found_item is not None:
+        sql_query_expirations = """SELECT * FROM general_items WHERE itemName = ?"""
+
+        connection = create_connection("expirations.db")
+
+        if connection is not None:
+            curs = execute_sql(connection, sql_query_expirations, (found_item[0],), commit=False)
+            results = curs.fetchall()
+            return results
+        else:
+            print("Unable to create expirations.db connection.")
+            return None
+    else:
+        print("Unable to find item {}".format(name))
         return None
 
 
@@ -459,50 +508,6 @@ def delete_all_storage_types():
     else:
         print("Unable to create storagetypes.db connection.")
         return False
-
-
-def levenshtein(s, t):
-    rows = len(s)+1
-    cols = len(t)+1
-    distance = np.zeros((rows,cols), dtype = int)
-
-    for i in range(1, rows):
-        for k in range(1,cols):
-            distance[i][0] = i
-            distance[0][k] = k
-
-    for col in range(1, cols):
-        for row in range(1, rows):
-            if s[row-1] == t[col-1]:
-                cost = 0
-            else:
-                cost = 2
-            distance[row][col] = min(distance[row-1][col] + 1,      # Cost of deletions
-                                 distance[row][col-1] + 1,          # Cost of insertions
-                                 distance[row-1][col-1] + cost)     # Cost of substitutions
-    Ratio = ((len(s)+len(t)) - distance[row][col]) / (len(s)+len(t))
-    return Ratio
-
-
-def match_item(raw_item):
-    sql_query_all_item = """SELECT * FROM general_items"""
-    connection = create_connection("expirations.db")
-    if connection is not None:
-        curs = execute_sql(connection, sql_query_all_item, (), commit=False)
-        results = curs.fetchall()
-        max = -1
-        curr = None
-
-        for database_item in results:
-            print(database_item)
-            ratio = levenshtein(database_item[0], raw_item).item()
-            if ratio > max:
-                curr = database_item
-                max = ratio
-        return curr
-    else:
-        print("Unable to create expirations.db.")
-        return None
 
 
 if __name__ == "__main__":

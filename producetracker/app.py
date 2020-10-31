@@ -7,6 +7,8 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.dropdown import DropDown
+from kivy.uix.button import Button
 from kivy import utils
 from producetracker.utilities import SwipeListener, Produce, valid_string
 # from producetracker.installer import installer
@@ -151,11 +153,39 @@ class InputPage(Screen):
 
     def text_entered(self, text=None):
         if text is None:
-            ret_item = match_item(self.ids.produce_input.text)
+            item_expirations = query_expirations_for_item(self.ids.produce_input.text)
         else:
-            ret_item = match_item(text)
-        '''if ret_item is not None:
-            id_ret = insert_user_table(ret_item)
+            item_expirations = query_expirations_for_item(text)
+        self.parent.children[0].produce_passed(item_expirations)
+
+
+class StoragePage(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def produce_passed(self, item_expirations):
+        # if queried produce list is empty, continue to pantry and display failure
+        if not item_expirations:
+            self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
+            self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)
+        else:
+            self.select_storage_type(item_expirations)
+
+    def select_storage_type(self, expirations):
+        print(expirations)
+        # id_ret = insert_user_table(expirations[0])
+        # self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
+        # self.parent.children[0].reset_list()
+        # self.parent.children[0].ids.title_text.text = 'Produce Added Successfully!'
+        # self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
+        # Clock.schedule_once(self.parent.children[0].reset_title, 3)
+        # produce_item = None
+        # return produce_item
+
+    def add_produce_item(self, produce_item):
+        if produce_item is not None:
+            id_ret = insert_user_table(produce_item)
             self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
             self.parent.children[0].reset_list()
             self.parent.children[0].ids.title_text.text = 'Produce Added Successfully!'
@@ -164,11 +194,7 @@ class InputPage(Screen):
         else:
             self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
             self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
-            Clock.schedule_once(self.parent.children[0].reset_title, 3)'''
-
-class StoragePage(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+            Clock.schedule_once(self.parent.children[0].reset_title, 3)
 
 
 
