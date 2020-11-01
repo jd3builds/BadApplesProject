@@ -85,6 +85,5 @@ Name: Marissa Garcia, Alexis Todd
 Date(s): 10/31/2020
 Description: Pair programmed from 12-8pm. Changed how the scraper populates the expirations database by adding an 'accepted_produce_items'
 file to limit the database to real, fresh produce. Added another page after manually inputting produce to specify a storage type, which
-affects the expiration dates. Discovered several bugs, such as not tracking the date each pantry item is added and decrementing the time
-remaining.
+affects the expiration dates. Discovered bugs that are logged to address in the future. 
 
