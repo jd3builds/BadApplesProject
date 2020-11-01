@@ -48,7 +48,7 @@ Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu
 
 Name: Marissa Garcia
 Date(s): 10/11/2020
-Description: Added a file for testing and refactoring
+Description: Created query and delete functions, refactored, added a file for testing
 Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/EVlkNyqtpExHkTOFrin3vtsBSeJCAFzZGw8AYfscZlCEzQ?e=wTGyHl
 
 Name: Alexis Todd, John Dillon, Joeseph Brody
@@ -80,4 +80,11 @@ Date(s): Sprint 2 Week 1
 Description: Pair programmed with Joe using Code With Me. Thus, all of my code from this week is under his pushes.
 I did all of the changes on database.py. Joe did most all of the frontend changes. We collectively integrated them together
 to make the ideas page work and function as intended.
+
+Name: Marissa Garcia, Alexis Todd
+Date(s): 10/31/2020
+Description: Pair programmed from 12-8pm. Changed how the scraper populates the expirations database by adding an 'accepted_produce_items'
+file to limit the database to real, fresh produce. Added another page after manually inputting produce to specify a storage type, which
+affects the expiration dates. Discovered several bugs, such as not tracking the date each pantry item is added and decrementing the time
+remaining.
 
