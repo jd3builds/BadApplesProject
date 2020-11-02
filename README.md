@@ -4,6 +4,8 @@
 ### Why
 Have you ever forgotten you have something in the fridge until after it expires? According to a report by the Natural Resources Defense Council, America throws out more than 1,250 calories per day per person. That is a lot of wasted resources. Our application will solve this problem by tracking produce.
 
+If you would like to learn more about the problem of food waste, you can watch [this video](https://www.youtube.com/watch?v=6RlxySFrkIM).
+
 ### What
 Produce tracker is an user-friendly application that will help you keep track of potential expired products to minimize waste. It will allow you to keep track of your pantry items and notify you upon imminent expirations. 
 
