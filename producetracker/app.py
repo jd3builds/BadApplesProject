@@ -124,12 +124,14 @@ class PantryPage(Screen):
 class IdeasPage(Screen):
     history_list = []
 
-    def __init__(self, **kwargs): # TODO query db
-        super().__init__(**kwargs)
-        pass
-
-    def on_enter(self, *args): # TODO add history to menu
+    def on_enter(self, *args): # TODO add history list to ideas scroll menu
         self.ids.nav_bar.ids.ideas_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
+        self.history_list.clear()
+        self.history_list = query_all_recent_expiration_items()
+        self.ids.pantry_scroll_menu.ids.grid_layout.clear_widgets()
+        for item in self.history_list:
+            print(item)
+            self.ids.pantry_scroll_menu.add_to_menu(item)
 
 
 class SettingsPage(Screen):
@@ -173,33 +175,6 @@ class InputPage(Screen):
             Clock.schedule_once(self.parent.children[0].reset_title, 3)
 
 
-class MenuItem(BoxLayout):
-    def __init__(self, name, time_remaining, quantity=1, **kwargs):
-        super().__init__(**kwargs)
-        self.ids.produce_label.text = name
-        self.ids.expiration_label.text = time_remaining
-
-    # if not exist yet, add
-    # if exists, update
-    def remove(self, *args):
-        calc_index = len(self.parent.children) - 1 - self.parent.children.index(self)
-        holder = query_recent_expiration_item_by_id(self.parent.parent.parent.parent.produce_list[calc_index])
-
-        if holder is not None:
-            #update
-            update_recent_expirations_table(holder, args[0])
-        else:
-            #add TODO: Figure out how to create second param
-            insert_recent_expirations_table(holder, args[0])
-
-
-        delete_user_item(self.parent.parent.parent.parent.produce_list[calc_index].id)
-        self.parent.parent.parent.parent.produce_list.pop(calc_index)  # removes item at calc_index from produce_list
-        self.parent.remove_widget(self)
-
-
-
-
 # Pantry ScrollMenu
 class ScrollMenu(ScrollView):
 
@@ -214,15 +189,66 @@ class ScrollMenu(ScrollView):
             self.ids.grid_layout.children[0].ids.expiration_label.color = utils.get_color_from_hex("#C40233")
 
 
+# Pantry ScrollMenu Item
+class MenuItem(BoxLayout):
+    def __init__(self, name, time_remaining, quantity=1, **kwargs):
+        super().__init__(**kwargs)
+        self.ids.produce_label.text = name
+        self.ids.expiration_label.text = time_remaining
 
+    # if not exist yet, add
+    # if exists, update
+    def remove(self, *args):
+        calc_index = len(self.parent.children) - 1 - self.parent.children.index(self)
+        holder = query_recent_expiration_item_by_name(self.parent.parent.parent.parent.produce_list[calc_index].itemName)
+        if len(holder) != 0:
+            # update
+            update_recent_expirations_table(holder[0], args[0])
+        else:
+            # add TODO: Figure out how to create second param
+            insert_recent_expirations_table(self.parent.parent.parent.parent.produce_list[calc_index], args[0])
+
+        delete_user_item(self.parent.parent.parent.parent.produce_list[calc_index].id)
+        self.parent.parent.parent.parent.produce_list.pop(calc_index)  # removes item at calc_index from produce_list
+        self.parent.remove_widget(self)
+
+
+# Ideas Page Scroll Menu
 class IdeasScrollMenu(ScrollView):
-    pass
+    def add_to_menu(self, item):
+        new_menu_item = ScrollMenuItem(item) # id name 10t trend
+        self.ids.grid_layout.add_widget(new_menu_item)
+
+
+# Menu Item of Ideas Page Scroll Menu
+class ScrollMenuItem(BoxLayout):
+    def __init__(self, item, **kwargs):
+        super().__init__(**kwargs)
+        self.ids.produce_label.text = item[1]
+        count = 0
+        for char in item[2]:
+            print(char)
+            if char == "1":
+                count += 1
+            else:
+                count -= 1
+        if count > 5:
+            self.ids.suggestion_label.text = "Buy more!"
+        elif count > 0:
+            self.ids.suggestion_label.text = "Buy a little more!"
+        elif count == 0:
+            self.ids.suggestion_label.text = "Keep it up!"
+        elif count > -5:
+            self.ids.suggestion_label.text = "Buy a little less!"
+        else:
+            self.ids.suggestion_label.text = "You wasteful swine!"
 
 
 class BadApplesApp(App):
     def build(self):
         root = Builder.load_file(os.path.join(os.path.dirname(__file__), 'style.kv'))
         return root
+
 
 def main():
     #os.system("sudo apt-get install xclip xsel")

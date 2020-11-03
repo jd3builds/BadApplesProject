@@ -135,11 +135,12 @@ def create_storage_type_table():
 
 
 def create_recent_expirations_table():
+
     sql_create_recent_expirations_table = """ CREATE TABLE IF NOT EXISTS recent_expirations(
                                             id integer PRIMARY KEY,
-                                            name varchar NOT NULL,
-                                            10trend varchar(10) NOT NULL,
-                                            trend integer NOT NULL,
+                                            itemName varchar NOT NULL,
+                                            trend10 varchar(10) NOT NULL,
+                                            trend integer NOT NULL
                                         );"""
 
     connection = create_connection("useritems.db")
@@ -253,13 +254,37 @@ def insert_storage_type_table(storage_type):
         return False
 
 
-def insert_recent_expirations_table(recent_exp):
-    sql_insert_recent_expirations_table = """INSERT INTO recent_expirations (id, name, 10trend, trend) VALUES(?, ?, ?, ?)"""
+def insert_recent_expirations_table(recent_exp, use):
+    sql_insert_recent_expirations_table = """INSERT INTO recent_expirations (id, itemName, trend10, trend) VALUES(?, ?, ?, ?)"""
+
+    results = query_all_recent_expiration_items()
+    i = 0
+    for res in results:
+        if res[0] == i:
+            i += 1
+        else:
+            break
+
+    to_insert = []
+    to_insert.append(i)
+    to_insert.append(recent_exp.itemName)
+    trend_10 = "000000000"
+    trend = 0
+
+    if use:
+        trend_10 = trend_10 + "1"
+        trend = 1
+    else:
+        trend_10 = trend_10 + "0"
+        trend = -1
+
+    to_insert.append(trend_10)
+    to_insert.append(trend)
 
     connection = create_connection("useritems.db")
 
     if connection is not None:
-        return True if execute_sql(connection, sql_insert_recent_expirations_table, recent_exp) is not None else False
+        return True if execute_sql(connection, sql_insert_recent_expirations_table, to_insert) is not None else False
     else:
         print("Unable to create useritems.db connection.")
         return False
@@ -359,11 +384,32 @@ def update_storage_type_table(storage_type):
 
 def update_recent_expirations_table(recent_exp, use):
     sql_update_recent_expirations_table = """UPDATE recent_expirations
-                                            SET 10trend = ?,
+                                            SET trend10 = ?,
                                                 trend = ?
                                             WHERE id = ?
                                             """
+    update_info = []
+    update_info.append(recent_exp[2])
+    update_info.append(recent_exp[3])
+    update_info.append(recent_exp[0])
 
+    # update the new trend10
+    print(type(update_info[0]))
+    update_info[0] = (update_info[0])[1:len(update_info[0])]
+    if use:
+        update_info[0] += "1"
+        update_info[1] += 1
+    else:
+        update_info[0] += "0"
+        update_info[1] += -1
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        return True if execute_sql(connection, sql_update_recent_expirations_table, update_info) is not None else False
+    else:
+        print("Unable to create useritems.db connection.")
+        return False
 
 # ----------------- QUERY FUNCTIONS ----------------- #
 
@@ -421,6 +467,19 @@ def query_recent_expiration_item_by_id(id):
 
     if connection is not None:
         curs = execute_sql(connection, sql_query_recent_expiration_item, (id,), commit=False)
+        results = curs.fetchall()
+        return results
+    else:
+        print("Unable to create useritems.db connection.")
+        return None
+
+def query_recent_expiration_item_by_name(name):
+    sql_query_recent_expiration_item = """SELECT * FROM recent_expirations WHERE itemName LIKE '%'||?||'%'"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        curs = execute_sql(connection, sql_query_recent_expiration_item, (name,), commit=False)
         results = curs.fetchall()
         return results
     else:
@@ -568,5 +627,7 @@ def match_item(raw_item):
 
 
 if __name__ == "__main__":
-    # create_general_table()
+    print(":)")
     create_user_table()
+    create_recent_expirations_table()
+

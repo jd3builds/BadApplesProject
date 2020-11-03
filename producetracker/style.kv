@@ -6,6 +6,8 @@
 #:import ScrollEffect kivy.effects.scroll.ScrollEffect
 #:import Factory kivy.factory.Factory
 
+#################### Custom Widgets ####################
+
 # Image Button
 # For button alone define image attributes immediately below 'ImageButton' declaration.
 # For button and label declare 'ImageButton' within the context of a BoxLayout with a
@@ -132,6 +134,15 @@
             font_size: 14
 
 
+# Pantry Scroll Menu
+# Modification of ScrollView widget that allows for greater than one children.
+<ScrollMenu@ScrollView>:
+    GridLayout:
+        id: grid_layout
+        size_hint_y: None
+        cols: 1
+
+
 # Menu Item
 # Widget to be added to the ScrollMenu. Has two labels that can be accessed to display text.
 <MenuItem@BoxLayout>:
@@ -180,15 +191,6 @@
         size_hint_x: .1
 
 
-# Pantry Scroll Menu
-# Modification of ScrollView widget that allows for greater than one children.
-<ScrollMenu@ScrollView>:
-    GridLayout:
-        id: grid_layout
-        size_hint_y: None
-        cols: 1
-
-
 # Ideas Scroll Menu
 # Modification of ScrollView widget that allows for greater than one children.
 <IdeasScrollMenu@ScrollView>:
@@ -197,6 +199,48 @@
         size_hint_y: None
         cols: 1
 
+
+# Ideas Scroll Menu Item
+<ScrollMenuItem@BoxLayout>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: dp(30)
+
+    # Padding
+    Label:
+        size_hint_x: .1
+
+    # Suggestion Label
+    Label:
+        id: suggestion_label
+        text: "Suggestion Here"
+        color: utils.get_color_from_hex("#000000")
+        font_size: 18
+        size_hint_x: .7
+
+    # Produce Label
+    Label:
+        id: produce_label
+        text: "ProduceName (Quantity)"
+        color: utils.get_color_from_hex("#000000")
+        font_size: 18
+        size_hint_x: .7
+
+    # Recent Trend Label
+    Label:
+        id: recent_trend_label
+        text: "Recent Trend Label"
+        color: utils.get_color_from_hex("#000000")
+        font_size: 18
+        size_hint_x: .7
+
+    # Trend Label
+
+    # Padding
+    Label:
+        size_hint_x: .1
+
+#################### Pages  ####################
 
 Manager:
     transition: Transition.NoTransition()
@@ -397,8 +441,8 @@ Manager:
                 size_hint_x: .1
 
         # Content
-        ScrollMenu
-            id: scroll_menu
+        IdeasScrollMenu
+            id: pantry_scroll_menu
             size_hint_y: .75
 
         # Navigation Bar
