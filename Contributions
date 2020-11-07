@@ -1,5 +1,5 @@
 --- Template ---
-Name: 
+Name:
 Date(s):
 Description:
 
@@ -51,6 +51,10 @@ Date(s): 10/11/2020
 Description: Created query and delete functions, refactored, added a file for testing
 Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/EVlkNyqtpExHkTOFrin3vtsBSeJCAFzZGw8AYfscZlCEzQ?e=wTGyHl
 
+Name: Pablo Estrada
+Date(s): 10/14/2020
+Description: Added data scraper for getting information from eatbydate (limited to the fruits category for now)
+
 Name: Alexis Todd, John Dillon, Joeseph Brody
 Date(s): 10/13/2020 - 10/14/2020
 Description: Had a 6 hour group meeting where I worked on camera debug and John and Joeseph worked on integrating frontend and backend
@@ -58,17 +62,33 @@ Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu
 
 Name: Alexis Todd
 Date(s): 10/14/2020
-Description: Continued debugging camera and made a breakthrough. 
+Description: Continued debugging camera and made a breakthrough.
 Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/EW0G9UsE99hClnC7Mf9tcZcBIYBkdSYSuL8824KWEcX7cg?e=aDaPDl
 
 Name: Joseph Brody, John Dillon
 Date(s): 10/14/2020
 Description: Integrated database with front-end. Insertion and removal of fruit from front end synced with database.
 
+Name: Pablo Estrada
+Date(s): 10/14/2020
+Description: Added matching method (using levenshtein algorithm) to match strings to products in the database
+
 Name: Alexis Todd, Marissa Garcia
 Date(s): 10/15/2020
 Description: Worked with Marissa on Tesseract and successfully integrated scanner functionality into the project
 Timestamp: https://uflorida-my.sharepoint.com/:i:/g/personal/alexis_todd_ufl_edu/ETQ8u9Pdo69JpZwwdAskCWQBJlJhRNYOucXEcf4lnkwpsw?e=SsHYBH
+
+Name: Joseph Brody, John Dillon, Pablo Estrada
+Date(s): 10/15/2020
+Description: Packaging the project code session (including testing on Ubuntu VM, packaging to PyPI, fixing errors on production build). Work session of around three to four hours of work.
+
+Name: Joseph Brody, John Dillon, Pablo Estrada
+Date(s): 10/16/2020
+Description: Continued working on project packaging (Fixing dependency issues with packaging, relative paths and including resources, such as images and assets, into the packaged build, and testing on VM) Work session of around three to four hours of work
+
+Name: Joseph Brody, John Dillon, Pablo Estrada
+Date(s): 10/17/2020
+Description: Finished project packaging (Uploaded to PyPI build with fixed dependencies and paths, finalized setup.py script, added entrypoint, fixed Kivy issue with camera by switching to OpenCV) Work session of around three to four hours of work
 
 Name: Alexis Todd, Marissa Garcia
 Date(s): 10/19/2020
@@ -85,5 +105,4 @@ Name: Marissa Garcia, Alexis Todd
 Date(s): 10/31/2020
 Description: Pair programmed from 12-8pm. Changed how the scraper populates the expirations database by adding an 'accepted_produce_items'
 file to limit the database to real, fresh produce. Added another page after manually inputting produce to specify a storage type, which
-affects the expiration dates. Discovered bugs that are logged to address in the future. 
-
+affects the expiration dates. Discovered bugs that are logged to address in the future.
