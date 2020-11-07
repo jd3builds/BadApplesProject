@@ -18,17 +18,6 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="expirations" uuid="0981720e-931b-48fb-8e2e-757728f4a6e9">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\db\expirations.db</jdbc-url>
-      <libraries>
-        <library>
-          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
-        </library>
-      </libraries>
-    </data-source>
     <data-source source="LOCAL" name="useritems [2]" uuid="21032068-0f48-4fc9-a6fc-d3e3d99d6065">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
@@ -51,7 +40,29 @@
         </library>
       </libraries>
     </data-source>
-    <data-source source="LOCAL" name="expirations [2]" uuid="62c37ad0-3e72-409b-b046-8c2e8eac8f31">
+    <data-source source="LOCAL" name="subcategories" uuid="73a533c7-97a3-467b-a5ae-fe1abe17da48">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\producetracker\subcategories.db</jdbc-url>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="storagetypes" uuid="cb5b98f9-3649-480f-b0ef-e67620305dcd">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:D:\BadApplesProject\producetracker\storagetypes.db</jdbc-url>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+        </library>
+      </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="expirations" uuid="b6d04d2e-7186-4fdb-8d5d-bb9dde2c5838">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>

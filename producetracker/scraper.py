@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from bs4 import Tag
-from android_app.database import insert_general_table
+from producetracker.database import insert_general_table
 
 counter = 0
 

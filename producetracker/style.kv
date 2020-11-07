@@ -136,16 +136,16 @@
 
 # Pantry Scroll Menu
 # Modification of ScrollView widget that allows for greater than one children.
-<ScrollMenu@ScrollView>:
+<PantryScrollMenu@ScrollView>:
     GridLayout:
         id: grid_layout
         size_hint_y: None
         cols: 1
 
 
-# Menu Item
+# Pantry Menu Item
 # Widget to be added to the ScrollMenu. Has two labels that can be accessed to display text.
-<MenuItem@BoxLayout>:
+<PantryMenuItem@BoxLayout>:
     orientation: 'horizontal'
     size_hint_y: None
     height: dp(30)
@@ -201,14 +201,14 @@
 
 
 # Ideas Scroll Menu Item
-<ScrollMenuItem@BoxLayout>:
+<IdeasMenuItem@BoxLayout>:
     orientation: 'horizontal'
     size_hint_y: None
     height: dp(30)
 
     # Padding
     Label:
-        size_hint_x: .1
+        size_hint_x: .05
 
     # Suggestion Label
     Label:
@@ -216,29 +216,35 @@
         text: "Suggestion Here"
         color: utils.get_color_from_hex("#000000")
         font_size: 18
-        size_hint_x: .7
+        size_hint_x: .3
 
     # Produce Label
     Label:
         id: produce_label
-        text: "ProduceName (Quantity)"
+        text: "ProduceName"
         color: utils.get_color_from_hex("#000000")
         font_size: 18
-        size_hint_x: .7
+        size_hint_x: .3
 
     # Recent Trend Label
     Label:
         id: recent_trend_label
-        text: "Recent Trend Label"
+        text: "+X"
         color: utils.get_color_from_hex("#000000")
         font_size: 18
-        size_hint_x: .7
+        size_hint_x: .2
 
-    # Trend Label
+    # Lifetime Trend Label
+    Label:
+        id: lifetime_trend_label
+        text: "+X"
+        color: utils.get_color_from_hex("#000000")
+        font_size: 18
+        size_hint_x: .2
 
     # Padding
     Label:
-        size_hint_x: .1
+        size_hint_x: .05
 
 #################### Pages  ####################
 
@@ -371,7 +377,7 @@ Manager:
                 size_hint_x: .1
 
         # Produce Menu
-        ScrollMenu
+        PantryScrollMenu
             id: scroll_menu
             size_hint_y: .75
 
@@ -413,14 +419,14 @@ Manager:
             orientation: 'horizontal'
             size_hint_y: .05
             Label:
-                size_hint_x: .15
+                size_hint_x: .23
             Label:
                 text: 'Recommendation'
                 color: utils.get_color_from_hex("#000000")
                 bold: True
                 size_hint_x: .15
             Label:
-                size_hint_x: .05
+                size_hint_x: .06
             Label:
                 text: 'Item'
                 color: utils.get_color_from_hex("#000000")
@@ -430,19 +436,20 @@ Manager:
                 text: 'Recent Trend'
                 color: utils.get_color_from_hex("#000000")
                 bold: True
+                size_hint_x: .1
+            Label:
                 size_hint_x: .2
-
             Label:
                 text: 'Lifetime Trend'
                 color: utils.get_color_from_hex("#000000")
                 bold: True
-                size_hint_x: .2
-            Label:
                 size_hint_x: .1
+            Label:
+                size_hint_x: .2
 
         # Content
         IdeasScrollMenu
-            id: pantry_scroll_menu
+            id: ideas_scroll_menu
             size_hint_y: .75
 
         # Navigation Bar

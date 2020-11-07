@@ -394,7 +394,6 @@ def update_recent_expirations_table(recent_exp, use):
     update_info.append(recent_exp[0])
 
     # update the new trend10
-    print(type(update_info[0]))
     update_info[0] = (update_info[0])[1:len(update_info[0])]
     if use:
         update_info[0] += "1"
