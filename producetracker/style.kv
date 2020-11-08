@@ -336,8 +336,34 @@ Manager:
                 Rectangle:
                     size: self.size
                     pos: self.pos
-            Label:
-                size_hint_x: .2
+
+            # Search Bar
+            TextInput:
+                id: pantry_search_input
+                multiline: False
+                hint_text: 'i.e. Apple'
+                input_type: 'text'
+                size_hint_y: .8
+                padding_y: .2
+                cursor_color: utils.get_color_from_hex("#73AB84")
+                text_color: utils.get_color_from_hex("#73AB84")
+
+            # Submit Button
+            BoxLayout:
+                orientation: 'vertical'
+                # Background
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#73AB84')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ImageButton:
+                    source: 'submit_icon.png'
+                    size_hint_y: .7
+                    on_release: root.search_pressed()
+
+            # Title Text
             Label:
                 id: title_text
                 text: 'Pantry'
@@ -345,6 +371,7 @@ Manager:
                 font_size: 30
                 size_hint_x: .6
 
+            # Manual Input Button
             ImageButton:
                 on_release: app.root.current = 'input'
                 source: 'plus_icon.png'
@@ -402,17 +429,48 @@ Manager:
         orientation: 'vertical'
 
         # Title Bar
-        Label:
-            text: 'Ideas'
-            color: utils.get_color_from_hex("#000501")
+        BoxLayout:
+            orientation: 'horizontal'
             size_hint_y: .1
-            font_size: 30
             canvas.before:
                 Color:
                     rgba: utils.get_color_from_hex("#73AB84")
                 Rectangle:
                     size: self.size
                     pos: self.pos
+
+            # Search Bar
+            TextInput:
+                id: ideas_search_input
+                multiline: False
+                hint_text: 'i.e. Apple'
+                input_type: 'text'
+                size_hint_y: .8
+                padding_y: .2
+                cursor_color: utils.get_color_from_hex("#73AB84")
+                text_color: utils.get_color_from_hex("#73AB84")
+
+            # Submit Button
+            BoxLayout:
+                orientation: 'vertical'
+                # Background
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#73AB84')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ImageButton:
+                    source: 'submit_icon.png'
+                    size_hint_y: .7
+                    on_release: root.search_pressed()
+
+            # Title Text
+            Label:
+                text: 'Ideas'
+                color: utils.get_color_from_hex("#000501")
+                font_size: 30
+
 
         # Subtitle Bar
         BoxLayout:

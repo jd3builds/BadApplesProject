@@ -604,6 +604,17 @@ def levenshtein(s, t):
     return Ratio
 
 
+def search_item(raw_item, item_list, name_index):
+    curr = []
+    for i in item_list:
+        ratio = levenshtein(i[name_index], raw_item).item()
+        curr.append([i, ratio])
+
+    curr = sorted(curr, key=lambda x: x[1], reverse=True)
+    res = [item[0] for item in curr]
+    return res
+
+
 def match_item(raw_item):
     sql_query_all_item = """SELECT * FROM general_items"""
 

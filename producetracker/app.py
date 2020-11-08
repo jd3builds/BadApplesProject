@@ -64,7 +64,7 @@ class LandingPage(Screen):
 
 
 class PantryPage(Screen):
-    produce_list = []   # list of type Produce, containing all items from useritems.db
+    produce_list = []  # list of type Produce, containing all items from useritems.db
 
     # Queries all produce from the database and appends them to produce_list on launch.
     def __init__(self, **kwargs):
@@ -82,8 +82,9 @@ class PantryPage(Screen):
 
     # Sorts the produce_list in ascending order of expiration. The scroll menu is then cleared, and a new
     # menu item is added to the scroll menu for each item in produce_list.
-    def build_pantry_menu(self):
-        self.produce_list = sorted(self.produce_list,
+    def build_pantry_menu(self, sort=True):
+        if sort:
+            self.produce_list = sorted(self.produce_list,
                                    key=lambda x: int((dt.fromisoformat(x.expirationDate) - dt.today()).days),
                                    reverse=False)
 
@@ -140,6 +141,17 @@ class PantryPage(Screen):
             self.ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
             Clock.schedule_once(self.parent.children[0].reset_title, 3)
 
+    # TODO
+    def search_pressed(self):
+        if self.ids.pantry_search_input.text.strip() is "":
+            return
+        self.produce_list = [item.return_as_list() for item in self.produce_list]
+        #print(self.produce_list)
+        self.produce_list = search_item(self.ids.pantry_search_input.text, self.produce_list, 0)
+       # print(self.produce_list)
+        self.produce_list = [Produce(item) for item in self.produce_list]
+        self.build_pantry_menu(sort=False)
+
 
 class IdeasPage(Screen):
     history_list = []
@@ -148,8 +160,17 @@ class IdeasPage(Screen):
     # the scroll menu. All recent expirations are then queried from the database and added to the scroll menu.
     def on_enter(self, *args):
         self.ids.nav_bar.ids.ideas_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
-
         self.history_list = query_all_recent_expiration_items()
+        self.build_ideas_menu()
+
+    # TODO
+    def search_pressed(self):
+        if self.ids.ideas_search_input.text.strip() is "":
+            return
+        self.history_list = search_item(self.ids.ideas_search_input.text, self.history_list, 1)
+        self.build_ideas_menu()
+
+    def build_ideas_menu(self):
         self.ids.ideas_scroll_menu.ids.grid_layout.clear_widgets()
 
         for item in self.history_list:
