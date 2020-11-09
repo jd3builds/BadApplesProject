@@ -5,6 +5,7 @@ from datetime import datetime as dt, date, timedelta
 import time
 import os.path
 
+
 # ----------------- HELPER FUNCTIONS ----------------- #
 
 
@@ -135,7 +136,6 @@ def create_storage_type_table():
 
 
 def create_recent_expirations_table():
-
     sql_create_recent_expirations_table = """ CREATE TABLE IF NOT EXISTS recent_expirations(
                                             id integer PRIMARY KEY,
                                             itemName varchar NOT NULL,
@@ -149,6 +149,7 @@ def create_recent_expirations_table():
         execute_sql(connection, sql_create_recent_expirations_table, commit=False)
     else:
         print("Unable to create useritems.db connection")
+
 
 # ----------------- INSERTION FUNCTIONS ----------------- #
 
@@ -172,7 +173,6 @@ def insert_general_table(item):
 # Inserts item in user_items table in useritems.db file
 # Returns True on successful insertion, returns False otherwise
 def insert_user_table(item):
-
     normal_days = 0
 
     if item[8] == 'Days' or item[8] == 'days':
@@ -265,17 +265,14 @@ def insert_recent_expirations_table(recent_exp, use):
         else:
             break
 
-    to_insert = []
-    to_insert.append(i)
-    to_insert.append(recent_exp.itemName)
+    to_insert = [i, recent_exp.itemName]
     trend_10 = "000000000"
-    trend = 0
 
     if use:
         trend_10 = trend_10 + "1"
         trend = 1
     else:
-        trend_10 = trend_10 + "0"
+        trend_10 = trend_10 + "2"
         trend = -1
 
     to_insert.append(trend_10)
@@ -288,6 +285,7 @@ def insert_recent_expirations_table(recent_exp, use):
     else:
         print("Unable to create useritems.db connection.")
         return False
+
 
 # ----------------- UPDATE FUNCTIONS ----------------- #
 
@@ -399,7 +397,7 @@ def update_recent_expirations_table(recent_exp, use):
         update_info[0] += "1"
         update_info[1] += 1
     else:
-        update_info[0] += "0"
+        update_info[0] += "2"
         update_info[1] += -1
 
     connection = create_connection("useritems.db")
@@ -409,6 +407,7 @@ def update_recent_expirations_table(recent_exp, use):
     else:
         print("Unable to create useritems.db connection.")
         return False
+
 
 # ----------------- QUERY FUNCTIONS ----------------- #
 
@@ -471,6 +470,7 @@ def query_recent_expiration_item_by_id(id):
     else:
         print("Unable to create useritems.db connection.")
         return None
+
 
 def query_recent_expiration_item_by_name(name):
     sql_query_recent_expiration_item = """SELECT * FROM recent_expirations WHERE itemName LIKE '%'||?||'%'"""
@@ -582,25 +582,25 @@ def delete_all_storage_types():
 
 
 def levenshtein(s, t):
-    rows = len(s)+1
-    cols = len(t)+1
-    distance = np.zeros((rows,cols), dtype = int)
+    rows = len(s) + 1
+    cols = len(t) + 1
+    distance = np.zeros((rows, cols), dtype=int)
 
     for i in range(1, rows):
-        for k in range(1,cols):
+        for k in range(1, cols):
             distance[i][0] = i
             distance[0][k] = k
 
     for col in range(1, cols):
         for row in range(1, rows):
-            if s[row-1] == t[col-1]:
+            if s[row - 1] == t[col - 1]:
                 cost = 0
             else:
                 cost = 2
-            distance[row][col] = min(distance[row-1][col] + 1,      # Cost of deletions
-                                 distance[row][col-1] + 1,          # Cost of insertions
-                                 distance[row-1][col-1] + cost)     # Cost of substitutions
-    Ratio = ((len(s)+len(t)) - distance[row][col]) / (len(s)+len(t))
+            distance[row][col] = min(distance[row - 1][col] + 1,  # Cost of deletions
+                                     distance[row][col - 1] + 1,  # Cost of insertions
+                                     distance[row - 1][col - 1] + cost)  # Cost of substitutions
+    Ratio = ((len(s) + len(t)) - distance[row][col]) / (len(s) + len(t))
     return Ratio
 
 
@@ -640,4 +640,3 @@ if __name__ == "__main__":
     print(":)")
     create_user_table()
     create_recent_expirations_table()
-

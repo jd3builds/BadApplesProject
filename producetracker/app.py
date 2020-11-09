@@ -19,7 +19,7 @@ kivy.resources.resource_add_path(os.path.join(os.path.dirname(__file__), 'resour
 pytesseract.pytesseract.tesseract_cmd = r'../pytesseract/tesseract'
 
 
-# ----------------- Screen Classes ----------------- #
+# ---------------------------------- Screen Classes ---------------------------------- #
 
 # Screen manager class that serves as the parent of all the other screen classes.
 # Facilitates the transition between screens, as well as any functions that should be
@@ -65,28 +65,33 @@ class LandingPage(Screen):
 
 class PantryPage(Screen):
     produce_list = []  # list of type Produce, containing all items from useritems.db
+    title_widgets = []  # list of all default title bar widgets
 
-    # Queries all produce from the database and appends them to produce_list on launch.
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
+        # Query all produce from the database and append them to the produce list.
         all_items = query_all_user_item()
         for item in all_items:
             self.produce_list.append(Produce(item))
 
-    # Event function called when pantry page is entered.
-    # Highlights relevant nav bar buttons and calls functions that build pantry menu items.
-    def on_enter(self, *args):
+    # Event function called just before pantry page is entered.
+    def on_pre_enter(self, *args):
         self.ids.nav_bar.ids.pantry_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
+
+        # Reset title bar if search bar is on screen
+        if type(self.ids.title_bar.children[0]) == SearchBar:
+            self.reset_title_bar()
+
         self.build_pantry_menu()
 
-    # Sorts the produce_list in ascending order of expiration. The scroll menu is then cleared, and a new
-    # menu item is added to the scroll menu for each item in produce_list.
+    # Sorts the produce_list in ascending order of expiration, unless sort=False. The scroll menu is then cleared, and
+    # a new menu item is added to the scroll menu for each item in produce_list.
     def build_pantry_menu(self, sort=True):
         if sort:
             self.produce_list = sorted(self.produce_list,
-                                   key=lambda x: int((dt.fromisoformat(x.expirationDate) - dt.today()).days),
-                                   reverse=False)
+                                       key=lambda x: int((dt.fromisoformat(x.expirationDate) - dt.today()).days),
+                                       reverse=False)
 
         self.ids.scroll_menu.ids.grid_layout.clear_widgets()
 
@@ -106,7 +111,7 @@ class PantryPage(Screen):
     def read_image(self):
         image_text = pytesseract.image_to_string(Image.open('IMG_SCANNED.png'))
 
-        ret_str = image_text.lower()
+        image_text = image_text.lower()
         re.sub(r'[^a-z ]+', '', image_text)
 
         list_entries = image_text.splitlines()
@@ -124,7 +129,7 @@ class PantryPage(Screen):
     # the pantry page is rebuilt. Feedback is displayed at top of page to indicate success or failure to user.
     # Parameter text is a candidate for a produce item.
     def consider_produce(self, text):
-        if text is None:
+        if text is None or len(text) == 0:
             return
 
         match = match_item(text)
@@ -141,40 +146,80 @@ class PantryPage(Screen):
             self.ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
             Clock.schedule_once(self.parent.children[0].reset_title, 3)
 
-    # TODO
-    def search_pressed(self):
-        if self.ids.pantry_search_input.text.strip() is "":
-            return
+    # Displays search box
+    def display_search(self):
+
+        # Add the default widgets to title_widgets, if it has not already been done.
+        if len(self.title_widgets) == 0:
+            for widget in self.ids.title_bar.children:
+                self.title_widgets.append(widget)
+
+        self.ids.title_bar.clear_widgets()
+        self.ids.title_bar.add_widget(SearchBar())
+
+    # Clears all widgets from the title bar, and inserts all of the widgets inside title_widgets (the default widgets).
+    def reset_title_bar(self):
+        self.ids.title_bar.clear_widgets()
+        for widget in reversed(self.title_widgets):
+            self.ids.title_bar.add_widget(widget)
+
+    # Pantry_list is re-ordered by a match ratio, in which items in the pantry_list that are most similar to the input
+    # are ordered first. The pantry scroll menu is then rebuilt with this new ordering. Since produce_list stores
+    # Produce objects and search_items takes a list, produce_list is converted to a list of lists. After the list is
+    # reordered by search, convert produce_list back to a list of produce items.
+    def order_by_search(self, text):
         self.produce_list = [item.return_as_list() for item in self.produce_list]
-        #print(self.produce_list)
-        self.produce_list = search_item(self.ids.pantry_search_input.text, self.produce_list, 0)
-       # print(self.produce_list)
+        self.produce_list = search_item(text, self.produce_list, 0)
         self.produce_list = [Produce(item) for item in self.produce_list]
         self.build_pantry_menu(sort=False)
 
 
 class IdeasPage(Screen):
-    history_list = []
+    history_list = []  # list of all produce items that have been used or expired
+    title_widgets = []  # list of all default title bar widgets
 
     # Event function called when user navigates to ideas page. Clears all of the menu items from history_list and
     # the scroll menu. All recent expirations are then queried from the database and added to the scroll menu.
-    def on_enter(self, *args):
+    def on_pre_enter(self, *args):
         self.ids.nav_bar.ids.ideas_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
+
+        # Reset title bar if search bar is on screen
+        if type(self.ids.title_bar.children[0]) == SearchBar:
+            self.reset_title_bar()
+
         self.history_list = query_all_recent_expiration_items()
         self.build_ideas_menu()
 
-    # TODO
-    def search_pressed(self):
-        if self.ids.ideas_search_input.text.strip() is "":
-            return
-        self.history_list = search_item(self.ids.ideas_search_input.text, self.history_list, 1)
+    # History_list is re-ordered by a match ratio, in which items in the history_list that are most similar to the
+    # input are ordered first. The ideas menu is then rebuilt with this new ordering.
+    def order_by_search(self, text):
+        self.history_list = search_item(text, self.history_list, 1)
         self.build_ideas_menu()
 
+    # Clears all widgets currently in the scroll menu, and then adds all items currently in the history_list to the
+    # scroll menu.
     def build_ideas_menu(self):
         self.ids.ideas_scroll_menu.ids.grid_layout.clear_widgets()
 
         for item in self.history_list:
             self.ids.ideas_scroll_menu.add_to_menu(item)
+
+    # Displays search box
+    def display_search(self):
+
+        # Add the default widgets to title_widgets, if it has not already been done.
+        if len(self.title_widgets) == 0:
+            for widget in self.ids.title_bar.children:
+                self.title_widgets.append(widget)
+
+        self.ids.title_bar.clear_widgets()
+        self.ids.title_bar.add_widget(SearchBar())
+
+    # Clears all widgets from the title bar, and inserts all of the widgets inside title_widgets (the default widgets).
+    def reset_title_bar(self):
+        self.ids.title_bar.clear_widgets()
+        for widget in reversed(self.title_widgets):
+            self.ids.title_bar.add_widget(widget)
 
 
 class SettingsPage(Screen):
@@ -187,115 +232,126 @@ class AboutPage(Screen):
         self.ids.nav_bar.ids.about_button.canvas.children[0].children[0].rgba = utils.get_color_from_hex('#385E3C')
 
 
-# TODO continue from here -- fix dupe code
 class InputPage(Screen):
 
-    def read_image(self):
-        ret_str = pytesseract.image_to_string(Image.open('IMG_SCANNED.png'))
-        ret_str.split()
-        re.sub(r'[^A-Za-z ]+', '', ret_str)
-        list_entries = ret_str.splitlines()
-        list_entries = list(filter(lambda item: valid_string(item), list_entries))
-        for item in list_entries:
-            self.text_entered(text=item)
-
-    # todo compare with consider produce
-    def text_entered(self, text=None):
-        if text is None:
-            self.ids.produce_input.text = self.ids.produce_input.text.strip()
-
-            # Exits function if empty string passed from input page
-            if len(self.ids.produce_input.text) == 0:
-                return
-
-            ret_item = match_item(self.ids.produce_input.text)
-        else:
-            ret_item = match_item(text)
-        if ret_item is not None:
-            id_ret = insert_user_table(ret_item)
-            self.parent.children[0].produce_list.append(Produce(query_user_item_by_id(id_ret)[0]))
-            self.parent.children[0].build_pantry_menu()
-            self.parent.children[0].ids.title_text.text = 'Produce Added Successfully!'
-            self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
-            Clock.schedule_once(self.parent.children[0].reset_title, 3)
-        else:
-            self.parent.children[0].ids.title_text.text = 'Failed to Add Produce!'
-            self.parent.children[0].ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
-            Clock.schedule_once(self.parent.children[0].reset_title, 3)
+    # Passes text in input box to consider_produce in pantry page.
+    def text_entered(self):
+        self.parent.children[0].consider_produce(self.ids.produce_input.text.strip())
 
 
-# ----------------- Widget Classes ----------------- #
+# ---------------------------------- Widget Classes ---------------------------------- #
 
-# Pantry ScrollMenu
 class PantryScrollMenu(ScrollView):
 
-    # Adds a MenuItem to the ScrollMenu
-    def add_to_menu(self, name, time_remaining, quantity=1):
-        new_menu_item = PantryMenuItem(name, time_remaining, quantity)
+    # Adds a PantryMenuItem, with the given name and time remaining, to the scroll menu.
+    def add_to_menu(self, name, time_remaining):
+        new_menu_item = PantryMenuItem(name, time_remaining)
         self.ids.grid_layout.add_widget(new_menu_item)
 
-        # Change text color to red if expiration below threshold
-        if int(time_remaining.split()[0]) <= 3:
-            self.ids.grid_layout.children[0].ids.produce_label.color = utils.get_color_from_hex("#C40233")
-            self.ids.grid_layout.children[0].ids.expiration_label.color = utils.get_color_from_hex("#C40233")
 
-
-# Pantry ScrollMenu Item
 class PantryMenuItem(BoxLayout):
-    def __init__(self, name, time_remaining, quantity=1, **kwargs):
+    def __init__(self, name, time_remaining, **kwargs):
         super().__init__(**kwargs)
         self.ids.produce_label.text = name
         self.ids.expiration_label.text = time_remaining
 
-    # if not exist yet, add
-    # if exists, update
+        # Change text color to red if the expiration is below threshold
+        if int(time_remaining.split()[0]) <= 3:
+            self.ids.produce_label.color = utils.get_color_from_hex("#C40233")
+            self.ids.expiration_label.color = utils.get_color_from_hex("#C40233")
+
+    # Removes self from PantryScrollMenu and pantry_items. If the item is in tne recent expirations table,
+    # the trend values of the item within the table are updated based on the specific button pressed to
+    # remove the item.
+    # Parameter args[0] is True if the used apple button is pressed, false if the expired apple button is
+    # pressed.
+    # The pathing here is absolutely atrocious, but there is really no way around it.
     def remove(self, *args):
-        calc_index = len(self.parent.children) - 1 - self.parent.children.index(self)
+        calc_index = len(self.parent.children) - 1 - self.parent.children.index(self)  # index of self in produce_list
         holder = query_recent_expiration_item_by_name(
             self.parent.parent.parent.parent.produce_list[calc_index].itemName)
+
+        # Update item if it already exists within the expirations table
         if len(holder) != 0:
-            # update
             update_recent_expirations_table(holder[0], args[0])
+
+        # Otherwise, add the item to the table
         else:
-            # add TODO: Figure out how to create second param
             insert_recent_expirations_table(self.parent.parent.parent.parent.produce_list[calc_index], args[0])
 
         delete_user_item(self.parent.parent.parent.parent.produce_list[calc_index].id)
-        self.parent.parent.parent.parent.produce_list.pop(calc_index)  # removes item at calc_index from produce_list
+        self.parent.parent.parent.parent.produce_list.pop(calc_index)
         self.parent.remove_widget(self)
 
 
-# Ideas Page Scroll Menu
 class IdeasScrollMenu(ScrollView):
+
+    # Constructs an IdeasMenuItem and adds it to the scroll menu.
+    # Parameter item is a tuple, with produce item attributes.
     def add_to_menu(self, item):
-        new_menu_item = IdeasMenuItem(item)  # id name 10t trend
+        new_menu_item = IdeasMenuItem(item)
         self.ids.grid_layout.add_widget(new_menu_item)
 
 
-# Menu Item of Ideas Page Scroll Menu
 class IdeasMenuItem(BoxLayout):
     def __init__(self, item, **kwargs):
         super().__init__(**kwargs)
         self.ids.produce_label.text = item[1]
-        self.ids.lifetime_trend_label.text = "+" + str(item[3]) if item[3] > 0 else str(item[3])
-        count = item[2].count("1")
-        count -= (10 - count)
+
+        # Calculate ten trend, and applies relevant suggestions.
+        count = item[2].count("1") - item[2].count("2")
         if count > 5:
             self.ids.suggestion_label.text = "Buy more!"
-            self.ids.suggestion_label.color = utils.get_color_from_hex('#216628')
+            self.ids.recent_trend_label.text = "Very Low"
+            self.ids.suggestion_label.color = utils.get_color_from_hex('#536e1c')
+            self.ids.recent_trend_label.color = utils.get_color_from_hex('#536e1c')
+            self.ids.produce_label.color = utils.get_color_from_hex('#536e1c')
+            self.ids.lifetime_trend_label.color = utils.get_color_from_hex('#536e1c')
         elif count > 2:
             self.ids.suggestion_label.text = "Buy a little more"
+            self.ids.recent_trend_label.text = "Low"
         elif count > -3:
             self.ids.suggestion_label.text = "Keep it up!"
+            self.ids.recent_trend_label.text = "Neutral"
         elif count > -6:
             self.ids.suggestion_label.text = "Buy a little less"
+            self.ids.recent_trend_label.text = "High"
         else:
             self.ids.suggestion_label.text = "Buy less!"
+            self.ids.recent_trend_label.text = "Very High"
             self.ids.suggestion_label.color = utils.get_color_from_hex("#C40233")
-        self.ids.recent_trend_label.text = "+" + str(count) if count > 0 else str(count)
+            self.ids.recent_trend_label.color = utils.get_color_from_hex('#C40233')
+            self.ids.produce_label.color = utils.get_color_from_hex('#C40233')
+            self.ids.lifetime_trend_label.color = utils.get_color_from_hex('#C40233')
+
+        # Lifetime trend feedback
+        if item[3] > 15:
+            self.ids.lifetime_trend_label.text = "Very Low"
+        elif item[3] > 5:
+            self.ids.lifetime_trend_label.text = "Low"
+        elif item[3] > -5:
+            self.ids.lifetime_trend_label.text = "Neutral"
+        elif item[3] > -15:
+            self.ids.lifetime_trend_label.text = "High"
+        else:
+            self.ids.lifetime_trend_label.text = "Very High"
 
 
-# ----------------- Driver Functions ----------------- #
+class SearchBar(BoxLayout):
+
+    # Event function that is called when the submit button on any SearchBar is pressed. Input text is
+    # formatted, and if non-empty, passed to its respective order_by_search function. The parent class's
+    # title bar is also reset. Any screen that has a SearchBar must have these exact functions and ids.
+    def submit(self):
+        text = self.ids.input_box.text.strip()
+
+        if text != "":
+            self.parent.parent.parent.order_by_search(text)
+
+        self.parent.parent.parent.reset_title_bar()
+
+
+# ---------------------------------- Driver Functions ---------------------------------- #
 
 class BadApplesApp(App):
     def build(self):

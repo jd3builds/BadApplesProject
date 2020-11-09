@@ -246,6 +246,44 @@
     Label:
         size_hint_x: .05
 
+
+# Generic search bar used in pantry and ideas page. TODO
+<SearchBar@BoxLayout>:
+    orientation: 'vertical'
+
+    Label:
+        size_hint_y: .225
+
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: .55
+
+        Label:
+            size_hint_x: .3
+
+        # Input Box
+        TextInput:
+            id: input_box
+            size_hint_x: .6
+            multiline: False
+            hint_text: 'i.e. Apple'
+            input_type: 'text'
+            cursor_color: utils.get_color_from_hex("#73AB84")
+            text_color: utils.get_color_from_hex("#73AB84")
+
+        # Submit Button
+        ImageButton:
+            size_hint_x: .2
+            source: 'submit_icon.png'
+            on_release: root.submit() 
+
+        Label:
+            size_hint_x: .2
+
+    Label:
+        size_hint_y: .225
+
+
 #################### Pages  ####################
 
 Manager:
@@ -328,6 +366,7 @@ Manager:
 
         # Title Bar
         BoxLayout:
+            id: title_bar
             orientation: 'horizontal'
             size_hint_y: .1
             canvas.before:
@@ -337,21 +376,10 @@ Manager:
                     size: self.size
                     pos: self.pos
 
-            # Search Bar
-            TextInput:
-                id: pantry_search_input
-                multiline: False
-                hint_text: 'i.e. Apple'
-                input_type: 'text'
-                size_hint_y: .8
-                padding_y: .2
-                cursor_color: utils.get_color_from_hex("#73AB84")
-                text_color: utils.get_color_from_hex("#73AB84")
-
-            # Submit Button
+            # Display Search Button
             BoxLayout:
                 orientation: 'vertical'
-                # Background
+                size_hint_x: .2
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex('#73AB84')
@@ -359,9 +387,8 @@ Manager:
                         pos: self.pos
                         size: self.size
                 ImageButton:
-                    source: 'submit_icon.png'
-                    size_hint_y: .7
-                    on_release: root.search_pressed()
+                    source: 'search_icon.png'
+                    on_release: root.display_search()
 
             # Title Text
             Label:
@@ -369,7 +396,7 @@ Manager:
                 text: 'Pantry'
                 color: utils.get_color_from_hex("#000501")
                 font_size: 30
-                size_hint_x: .6
+                size_hint_x: 1
 
             # Manual Input Button
             ImageButton:
@@ -430,6 +457,7 @@ Manager:
 
         # Title Bar
         BoxLayout:
+            id: title_bar
             orientation: 'horizontal'
             size_hint_y: .1
             canvas.before:
@@ -439,21 +467,10 @@ Manager:
                     size: self.size
                     pos: self.pos
 
-            # Search Bar
-            TextInput:
-                id: ideas_search_input
-                multiline: False
-                hint_text: 'i.e. Apple'
-                input_type: 'text'
-                size_hint_y: .8
-                padding_y: .2
-                cursor_color: utils.get_color_from_hex("#73AB84")
-                text_color: utils.get_color_from_hex("#73AB84")
-
-            # Submit Button
+            # Display Search Button
             BoxLayout:
                 orientation: 'vertical'
-                # Background
+                size_hint_x: .2
                 canvas.before:
                     Color:
                         rgba: utils.get_color_from_hex('#73AB84')
@@ -461,15 +478,18 @@ Manager:
                         pos: self.pos
                         size: self.size
                 ImageButton:
-                    source: 'submit_icon.png'
-                    size_hint_y: .7
-                    on_release: root.search_pressed()
+                    source: 'search_icon.png'
+                    on_release: root.display_search()
 
             # Title Text
             Label:
                 text: 'Ideas'
+                size_hint_x: 1
                 color: utils.get_color_from_hex("#000501")
                 font_size: 30
+
+            Label:
+                size_hint_x: .2
 
 
         # Subtitle Bar
@@ -491,14 +511,14 @@ Manager:
                 bold: True
                 size_hint_x: .7
             Label:
-                text: 'Recent Trend'
+                text: 'Recent Waste'
                 color: utils.get_color_from_hex("#000000")
                 bold: True
                 size_hint_x: .1
             Label:
                 size_hint_x: .2
             Label:
-                text: 'Lifetime Trend'
+                text: 'Lifetime Waste'
                 color: utils.get_color_from_hex("#000000")
                 bold: True
                 size_hint_x: .1
