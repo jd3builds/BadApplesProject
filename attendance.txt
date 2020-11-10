@@ -7,3 +7,4 @@ Date    John Dillon    Alexis Todd   Marissa Garcia    Pablo Estrada   Joseph Br
 10/9           ✓                             ✓                 ✓             ✓     
 10/12          ✓             ✓               ✓                 ✓             ✓   
 11/2           ✓             ✓                                 ✓             ✓
+11/9           ✓                             ✓                 ✓             ✓
