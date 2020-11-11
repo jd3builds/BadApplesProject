@@ -1,9 +1,18 @@
 import requests
 from bs4 import BeautifulSoup
 from bs4 import Tag
-from android_app.database import insert_general_table
+from database import insert_general_table
 
 counter = 0
+
+def normalize_name(name):
+    if ' lasts' in name:
+        name = name.replace(' lasts', '')
+    if ' last' in name:
+        name = name.replace(' last', '')
+    if '(hard)*' in name:
+        name = name.replace('(hard)*', '')
+    return name
 
 def get_unopened(raw):
     val = None
@@ -13,10 +22,29 @@ def get_unopened(raw):
         val = False
     elif "opened" in raw.lower():
         val = True
-    # print(str(val) + " for " + raw + " and " + str("opened" in raw.lower()) + " and " + str("unopened" in raw.lower()))
     return val
 
+# Date amount to days (ex: 1 Year -> 365 days)
+def get_bound(normalized, units):
+    index = None
+    for i, c in enumerate(normalized):
+        if not c.isdigit():
+            index = i
+            break
+
+    return int(normalized[0:index]) * units[normalized[index:]]
+
+# Returns lower bound, upper bound, unit type
 def get_lower_and_upper_range(raw):
+    # Infinite amount of time
+    if raw == 'Indefinite':
+        return (99999, 99999, 'Days')
+    # Edge case: contains + in name (ex: 2+ Years -> 2 Years)
+    if '+' in raw:
+        raw = raw.replace('+', '')
+    # Edge case: unsure 'Cook First' means
+    if raw == 'Cook first':
+        return None
     if '(' in raw:
         raw = raw[0: raw.index('(')]
     # Fix this case
@@ -24,9 +52,18 @@ def get_lower_and_upper_range(raw):
         return None
     if '-' == raw:
         return None
-    # Fix this case
+
+    # Contains several units of measurement
     if "Year" in raw and "Months" in raw:
-        return None
+        normalized = raw.replace(" ", "").lower()
+        units = {
+            "year": 365,
+            "years": 365,
+            "month": 30,
+            "months": 30
+        }
+        dash = normalized.index('-')
+        return (get_bound(normalized[0:dash], units), get_bound(normalized[dash + 1:], units), "Days")
 
     if "date" in raw:
         raw = ' '.join(raw.split()[0:2])
@@ -53,7 +90,7 @@ def scrape_category_of_items(URL, category, subcategory):
             scrape_single_item_from_page(url, name, category, subcategory)
 
 # Working for fruit pages
-def scrape_single_item_from_page(URL, general_name, category,subcategory):
+def scrape_single_item_from_page(URL, general_name, category, subcategory):
     global counter
     r = requests.get(url=URL)
 
@@ -70,22 +107,26 @@ def scrape_single_item_from_page(URL, general_name, category,subcategory):
             if len(tr.contents) != 0 and "opened" in str(tr.contents[0]).lower():
                 categories[0] = str(tr.contents[0])
             continue
-        if len(current_contents) > 1 and len(current_contents[1].contents) != 0 and str(current_contents[1].contents[0]) in possible_storages:
+        # Current row is an invalid header (Past printed date)
+        if len(current_contents[1].contents) != 0 and str(current_contents[1].contents[0]) == 'Past Printed Date':
+            continue
+        # Current row is a header (unopened, pantry, etc...) containing non-product info
+        if len(current_contents[1].contents) != 0 and str(current_contents[1].contents[0]) in possible_storages:
             categories.clear()
             for th in current_contents:
                 categories.extend(list(map(lambda x: str(x), th.contents)))
             if len(current_contents[0].contents) == 0:
                 categories.insert(0, '-')
+        # Current row is a product row (item)
         else:
             if "Date" in current_contents[1].contents[0]:
                 continue
-            name = current_contents[0].contents[0].contents[0]
+            name = normalize_name(current_contents[0].contents[0].contents[0])
             for i in range(1, len(categories)):
                 unopened = get_unopened(categories[0])
                 ranges = get_lower_and_upper_range(current_contents[i].contents[0])
                 if ranges is None:
-                    pass
-                    print("Unable to add item " + name)
+                    print("Unable to add item " + name + " - " + categories[i] + " (range: "  + current_contents[i].contents[0] + ")")
                 else:
                     item = (name, counter, category, subcategory, categories[i], unopened, ranges[0], ranges[1], ranges[2])
                     items.append(items)
@@ -95,4 +136,12 @@ def scrape_single_item_from_page(URL, general_name, category,subcategory):
 
 
 if __name__ == '__main__':
+    scrape_single_item_from_page("https://www.eatbydate.com/fruits/fresh/tomatoes-shelf-life-expiration-date//", "Apples", "Fruits", "Fresh Fruits")
     scrape_category_of_items("https://www.eatbydate.com/fruits/fresh/", "Fruits", "Fresh Fruits")
+    scrape_category_of_items("https://www.eatbydate.com/proteins/beans-peas/", "Proteins", "Beans & Peas")
+    scrape_single_item_from_page("https://www.eatbydate.com/proteins/meats/deli-meat-shelf-life-expiration-date/", "Deli Meat", "Proteins", "Deli Meat")
+    scrape_category_of_items("https://www.eatbydate.com/proteins/meats/", "Proteins", "Meats")
+    scrape_category_of_items("https://www.eatbydate.com/proteins/nuts/", "Proteins", "Nuts and Seeds")
+    scrape_category_of_items("https://www.eatbydate.com/proteins/poultry/", "Proteins", "Poultry")
+    scrape_category_of_items("https://www.eatbydate.com/proteins/poultry/", "Proteins", "Seafood")
+    print("Added a total of " + str(counter) + " items to the database")
