@@ -11,6 +11,7 @@ from kivy import utils
 from producetracker.utilities import SwipeListener, Produce, valid_string
 # from producetracker.installer import installer
 from producetracker.database import *
+from producetracker.matching import match_item
 import os
 import os.path
 import sys
