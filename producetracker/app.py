@@ -67,6 +67,10 @@ class PantryPage(Screen):
     produce_list = []  # list of type Produce, containing all items from useritems.db
     title_widgets = []  # list of all default title bar widgets
 
+    # Sorting variables
+    sort_method = None  # sort function most recently called (or default)
+    last_search = None  # the last text searched by user
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -74,6 +78,25 @@ class PantryPage(Screen):
         all_items = query_all_user_item()
         for item in all_items:
             self.produce_list.append(Produce(item))
+
+        # Query settings database for default sort option TODo
+        pantrySort = query_settings()[0][1]
+        if pantrySort == 0:
+            self.sort_method = self.sort_by_expiration
+            self.exp_sort_ascend = True
+            self.title_sort_ascend = True
+        elif pantrySort == 1:
+            self.sort_method = self.sort_by_expiration
+            self.exp_sort_ascend = False
+            self.title_sort_ascend = True
+        elif pantrySort == 2:
+            self.sort_method = self.sort_by_title
+            self.title_sort_ascend = True
+            self.exp_sort_ascend = True
+        else:
+            self.sort_method = self.sort_by_title
+            self.title_sort_ascend = False
+            self.exp_sort_ascend = True
 
     # Event function called just before pantry page is entered.
     def on_pre_enter(self, *args):
@@ -83,16 +106,14 @@ class PantryPage(Screen):
         if type(self.ids.title_bar.children[0]) == SearchBar:
             self.reset_title_bar()
 
-        self.build_pantry_menu()
+        # TODO sort by currently selected sorting option
+        self.sort_method() if self.sort_method != self.sort_by_search else self.sort_method(self.last_search)
+
+        # self.build_pantry_menu()
 
     # Sorts the produce_list in ascending order of expiration, unless sort=False. The scroll menu is then cleared, and
     # a new menu item is added to the scroll menu for each item in produce_list.
-    def build_pantry_menu(self, sort=True):
-        if sort:
-            self.produce_list = sorted(self.produce_list,
-                                       key=lambda x: int((dt.fromisoformat(x.expirationDate) - dt.today()).days),
-                                       reverse=False)
-
+    def build_pantry_menu(self):
         self.ids.scroll_menu.ids.grid_layout.clear_widgets()
 
         for item in self.produce_list:
@@ -136,7 +157,11 @@ class PantryPage(Screen):
         if match is not None:
             match_id = insert_user_table(match)
             self.produce_list.append(Produce(query_user_item_by_id(match_id)[0]))
-            self.build_pantry_menu()
+
+            # TODO sort by currently selected sorting option, pass text param if by search
+            self.sort_method() if self.sort_method != self.sort_by_search else self.sort_method(self.last_search)
+
+            # self.build_pantry_menu()
             self.ids.title_text.text = 'Produce Added Successfully!'
             self.ids.title_text.color = utils.get_color_from_hex('#FFFFFF')
             Clock.schedule_once(self.parent.children[0].reset_title, 3)
@@ -163,20 +188,83 @@ class PantryPage(Screen):
         for widget in reversed(self.title_widgets):
             self.ids.title_bar.add_widget(widget)
 
+    # TODO set search as sort_method and update last search
     # Pantry_list is re-ordered by a match ratio, in which items in the pantry_list that are most similar to the input
     # are ordered first. The pantry scroll menu is then rebuilt with this new ordering. Since produce_list stores
     # Produce objects and search_items takes a list, produce_list is converted to a list of lists. After the list is
     # reordered by search, convert produce_list back to a list of produce items.
-    def order_by_search(self, text):
+    def sort_by_search(self, text):
         self.produce_list = [item.return_as_list() for item in self.produce_list]
         self.produce_list = search_item(text, self.produce_list, 0)
         self.produce_list = [Produce(item) for item in self.produce_list]
-        self.build_pantry_menu(sort=False)
+        self.build_pantry_menu()
+
+        # TODO
+        self.sort_method = self.sort_by_search
+        self.last_search = text
+
+    # TODO implement ascend vs descend; and set as sort_method; and last_exp_sort
+    def sort_by_expiration(self, button_press=False):
+
+        if button_press:
+            if self.sort_method == self.sort_by_expiration:
+                self.exp_sort_ascend = not self.exp_sort_ascend
+            else:
+                self.exp_sort_ascend = True
+                self.sort_method = self.sort_by_expiration
+
+        self.produce_list = sorted(self.produce_list,
+                                   key=lambda x: int((dt.fromisoformat(x.expirationDate) - dt.today()).days),
+                                   reverse=not self.exp_sort_ascend)
+
+        self.build_pantry_menu()
+
+    # TODO
+    def sort_by_title(self, button_press=False):
+
+        if button_press:
+            if self.sort_method == self.sort_by_title:
+                self.title_sort_ascend = not self.title_sort_ascend
+            else:
+                self.title_sort_ascend = True
+                self.sort_method = self.sort_by_title
+
+        self.produce_list = sorted(self.produce_list,
+                                   key=lambda x: x.itemName,
+                                   reverse=not self.title_sort_ascend)
+
+        self.build_pantry_menu()
 
 
 class IdeasPage(Screen):
     history_list = []  # list of all produce items that have been used or expired
     title_widgets = []  # list of all default title bar widgets
+
+    # Sorting variables todo
+    sort_method = None
+    last_search = None
+
+    # todo
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        ideasSort = query_settings()[0][2]
+        if ideasSort == 0:
+            self.sort_method = self.sort_by_recommendation
+            self.rec_sort_ascend = True
+            self.title_sort_ascend = True
+        elif ideasSort == 1:
+            self.sort_method = self.sort_by_recommendation
+            self.rec_sort_ascend = False
+            self.title_sort_ascend = True
+        elif ideasSort == 2:
+            self.sort_method = self.sort_by_title
+            self.title_sort_ascend = True
+            self.rec_sort_ascend = True
+        else:
+            self.sort_method = self.sort_by_title
+            self.title_sort_ascend = False
+            self.rec_sort_ascend = True
 
     # Event function called when user navigates to ideas page. Clears all of the menu items from history_list and
     # the scroll menu. All recent expirations are then queried from the database and added to the scroll menu.
@@ -188,13 +276,11 @@ class IdeasPage(Screen):
             self.reset_title_bar()
 
         self.history_list = query_all_recent_expiration_items()
-        self.build_ideas_menu()
 
-    # History_list is re-ordered by a match ratio, in which items in the history_list that are most similar to the
-    # input are ordered first. The ideas menu is then rebuilt with this new ordering.
-    def order_by_search(self, text):
-        self.history_list = search_item(text, self.history_list, 1)
-        self.build_ideas_menu()
+        # todo
+        self.sort_method() if self.sort_method != self.sort_by_search else self.sort_method(self.last_search)
+
+        # self.build_ideas_menu()
 
     # Clears all widgets currently in the scroll menu, and then adds all items currently in the history_list to the
     # scroll menu.
@@ -220,6 +306,47 @@ class IdeasPage(Screen):
         self.ids.title_bar.clear_widgets()
         for widget in reversed(self.title_widgets):
             self.ids.title_bar.add_widget(widget)
+
+    # History_list is re-ordered by a match ratio, in which items in the history_list that are most similar to the
+    # input are ordered first. The ideas menu is then rebuilt with this new ordering.
+    def sort_by_search(self, text):
+        self.history_list = search_item(text, self.history_list, 1)
+        self.build_ideas_menu()
+
+        # todo
+        self.sort_method = self.sort_by_search
+        self.last_search = text
+
+    # todo
+    def sort_by_recommendation(self, button_press=False):
+
+        if button_press:
+            if self.sort_method == self.sort_by_recommendation:
+                self.rec_sort_ascend = not self.rec_sort_ascend
+            else:
+                self.rec_sort_ascend = True
+                self.sort_method = self.sort_by_recommendation
+
+        self.history_list = sorted(self.history_list,
+                                   key=lambda x: x[2].count("1") - x[2].count("2"),
+                                   reverse=self.rec_sort_ascend)
+
+        self.build_ideas_menu()
+
+    # TODO
+    def sort_by_title(self, button_press=False):
+        if button_press:
+            if self.sort_method == self.sort_by_title:
+                self.title_sort_ascend = not self.title_sort_ascend
+            else:
+                self.title_sort_ascend = True
+                self.sort_method = self.sort_by_title
+
+        self.history_list = sorted(self.history_list,
+                                   key=lambda x: x[1],
+                                   reverse=not self.title_sort_ascend)
+
+        self.build_ideas_menu()
 
 
 class SettingsPage(Screen):
@@ -346,7 +473,7 @@ class SearchBar(BoxLayout):
         text = self.ids.input_box.text.strip()
 
         if text != "":
-            self.parent.parent.parent.order_by_search(text)
+            self.parent.parent.parent.sort_by_search(text)
 
         self.parent.parent.parent.reset_title_bar()
 

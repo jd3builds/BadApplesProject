@@ -150,6 +150,21 @@ def create_recent_expirations_table():
     else:
         print("Unable to create useritems.db connection")
 
+def create_settings_table():
+    sql_create_settings_table = """ CREATE TABLE IF NOT EXISTS settings(
+                                    id integer PRIMARY KEY,
+                                    pantrySort integer,
+                                    ideaSort integer,
+                                    primaryColor varchar,
+                                    secondaryColor varchar
+                                );"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        execute_sql(connection, sql_create_settings_table, commit=False)
+    else:
+        print("Unable to create useritems.db connection")
 
 # ----------------- INSERTION FUNCTIONS ----------------- #
 
@@ -287,10 +302,20 @@ def insert_recent_expirations_table(recent_exp, use):
         return False
 
 
-# ----------------- UPDATE FUNCTIONS ----------------- #
+def insert_settings_table():
+    sql_insert_settings_table = """INSERT INTO settings (id, pantrySort, ideaSort, primaryColor, secondaryColor) VALUES(?, ?, ?, ?, ?)"""
 
+    connection = create_connection("useritems.db")
 
-# Updates item in general_items table in expirations.dbfile
+    settings = [1, 0, 0, '#99D19C', '#73AB84']
+
+    if connection is not None:
+        return True if execute_sql(connection, sql_insert_settings_table, settings) is not None else False
+    else:
+        print("Unable to create useritems.db connection.")
+        return False
+
+# ------settings_FUNCTIONS -------------settings item in general_items table in expirations.dbfile
 def update_general_table(item):
     sql_update_general_table = """ UPDATE general_items
                                     SET id = ? ,
@@ -409,6 +434,32 @@ def update_recent_expirations_table(recent_exp, use):
         return False
 
 
+# id, pantrySort, ideaSort, primaryColor, secondaryColor
+def update_settings_table(new_settings):
+    sql_update_settings_table = """UPDATE settings
+                                    SET pantrySort = ?,
+                                        ideaSort = ?,
+                                        primaryColor = ?,
+                                        secondaryColor = ?
+                                    WHERE id = 1
+                                    """
+
+    default_settings = query_settings()
+    default_settings = default_settings[0]
+
+    for i, item in enumerate(new_settings):
+        if item is None:
+            new_settings[i] = default_settings[i]
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        return True if execute_sql(connection, sql_update_settings_table, new_settings) is not None else False
+    else:
+        print("Unable to create useritems.db connection.")
+        return False
+
+
 # ----------------- QUERY FUNCTIONS ----------------- #
 
 
@@ -499,6 +550,18 @@ def query_all_recent_expiration_items():
         print("Unable to create useritems.db connection.")
         return None
 
+def query_settings():
+    sql_query_settings = """SELECT * FROM settings"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        curs = execute_sql(connection, sql_query_settings, commit=False)
+        results = curs.fetchall()
+        return results
+    else:
+        print("Unable to create useritems.db connection.")
+        return None
 
 # ----------------- DELETE FUNCTIONS ----------------- #
 
@@ -580,6 +643,16 @@ def delete_all_storage_types():
         print("Unable to create storagetypes.db connection.")
         return False
 
+def delete_all_recent_expiration_items():
+    sql_delete_all_items = """DELETE FROM recent_expirations"""
+
+    connection = create_connection("useritems.db")
+
+    if connection is not None:
+        return True if execute_sql(connection, sql_delete_all_items) is not None else False
+    else:
+        print("Unable to create useritems.db connection.")
+        return False
 
 def levenshtein(s, t):
     rows = len(s) + 1
@@ -638,5 +711,6 @@ def match_item(raw_item):
 
 if __name__ == "__main__":
     print(":)")
-    create_user_table()
-    create_recent_expirations_table()
+    # create_settings_table()
+    # insert_settings_table()
+    # update_settings_table([0, None, None, None])

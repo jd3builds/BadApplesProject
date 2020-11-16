@@ -247,7 +247,7 @@
         size_hint_x: .05
 
 
-# Generic search bar used in pantry and ideas page. TODO
+# Generic search bar used in pantry and ideas page.
 <SearchBar@BoxLayout>:
     orientation: 'vertical'
 
@@ -390,6 +390,34 @@ Manager:
                     source: 'search_icon.png'
                     on_release: root.display_search()
 
+            # Lexicographical Sort Button
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .2
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#73AB84')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ImageButton:
+                    source: 'alph_sort_icon.png'
+                    on_release: root.sort_by_title(True)
+
+            # Expiration Sort Button
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .2
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#73AB84')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ImageButton:
+                    source: 'expired_sort_icon.png'
+                    on_release: root.sort_by_expiration(True)
+
             # Title Text
             Label:
                 id: title_text
@@ -481,6 +509,34 @@ Manager:
                     source: 'search_icon.png'
                     on_release: root.display_search()
 
+            # Sort By Recommendation Button
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .2
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#73AB84')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ImageButton:
+                    source: 'search_icon.png'
+                    on_release: root.sort_by_recommendation(True)
+
+            # Sort By Title Button
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: .2
+                canvas.before:
+                    Color:
+                        rgba: utils.get_color_from_hex('#73AB84')
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ImageButton:
+                    source: 'search_icon.png'
+                    on_release: root.sort_by_title(True)
+
             # Title Text
             Label:
                 text: 'Ideas'
@@ -563,10 +619,23 @@ Manager:
                     size: self.size
                     pos: self.pos
 
-        # Content
+        # Pantry Settings
         Label:
+            text: 'Pantry'
             color: utils.get_color_from_hex("#000501")
-            size_hint_y: .8
+            size_hint_y: .1
+
+        # Ideas Settings
+        Label:
+            text: 'Ideas'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .1
+
+        # Misc Settings
+        Label:
+            text: 'Miscellaneous'
+            color: utils.get_color_from_hex("#000501")
+            size_hint_y: .1
 
         # Navigation Bar
         ButtonBar:
